@@ -10,12 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ariakit": "^2.0.0-next.44",
+    "@ariakit/react": "^0.4.15",
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.1",
-    "zustand": "^5.0.2",
-    "zustand-persist": "^0.4.0"
+    "vite-plugin-svgr": "^4.3.0",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

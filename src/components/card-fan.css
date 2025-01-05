@@ -1,0 +1,77 @@
+.card-fan-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.card-fan-footer .card-fan-wrapper {
+  position: absolute;
+  height: 20vh;
+  width: 50vw;
+  bottom: 0;
+}
+
+.card-fan-wrapper .card-fan {
+  width: 75vw;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.card-fan-footer .card-fan-wrapper:first-child {
+  right: 45vw;
+  transform: rotate(40deg);
+}
+
+.card-fan-footer .card-fan-wrapper:nth-child(2) {
+  left: 70vw;
+  height: 30vh;
+  transform: rotate(-20deg);
+}
+
+.card-fan {
+  position: relative;
+  overflow: visible;
+}
+
+.card-fan .game-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.game-card {
+  display: inline-block;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow:
+    -2px 2px 3px rgba(0, 0, 0, 0.1),
+    -4px 4px 6px rgba(0, 0, 0, 0.08),
+    -6px 8px 12px rgba(0, 0, 0, 0.2),
+    -8px 16px 32px rgba(0, 0, 0, 0.25);
+}
+
+.game-card svg {
+  display: inline-block;
+  height: 50vh;
+}
+
+.card-fan>*:first-child {
+  transform: translate3d(0vw, 0, 0) rotate(-15deg);
+}
+
+.card-fan>*:nth-child(2) {
+  transform: translate3d(5vw, 1vh, 0) rotate(-5deg);
+}
+
+.card-fan>*:nth-child(3) {
+  transform: translate3d(10vw, 2vh, 0) rotate(5deg);
+}
+
+.card-fan>*:nth-child(4) {
+  transform: translate3d(15vw, 3vh, 0) rotate(15deg);
+}

@@ -1,0 +1,65 @@
+.paper-line {
+  font-family: Bangers;
+  display: grid;
+  grid-template-columns: 17vw 1fr;
+  border-bottom: 1px solid rgba(255 255 255 / 0.2);
+  align-items: center;
+}
+
+.paper-footer {
+  font-family: Bangers;
+  display: grid;
+  grid-template-columns: 17vw 1fr;
+  align-items: center;
+}
+
+.paper-row {
+  padding-left: 3px;
+}
+
+.paper-heading {
+  font-size: 3.5em;
+}
+
+.paper-page {
+  min-height: 100dvh;
+}
+
+.paper-page::before {
+  content: '';
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 17vw;
+  bottom: 0;
+  z-index: -1;
+  border-left: 2px solid #aaa;
+}
+
+.paper-input {
+  font-family: Bangers;
+  width: calc(100% - 3px);
+  background: none;
+  border: none;
+  font-size: 2em;
+  padding: 10px 24px;
+}
+
+.paper-text-button {
+  padding: 10px 24px;
+  background: none;
+  border: none;
+  width: 100%;
+  font-size: 2em;
+  text-align: left;
+  color: inherit;
+  opacity: 0.1;
+}
+
+.paper-button {
+  background: none;
+  opacity: 0.5;
+  border: none;
+  color: inherit;
+  font-size: 1.3em;
+}
