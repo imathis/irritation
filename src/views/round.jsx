@@ -1,4 +1,9 @@
 import useGame from '../useGame'
+import { useNavigate } from 'react-router-dom'
+import { Grid } from '../components/grid';
+import { Layout } from '../components/layout'
+import { useRoundNumber } from './useRoundNumber'
+import * as Ariakit from '@ariakit/react'
 
 const countBooksAndRuns = (number) => {
   let books = 0;
@@ -6,7 +11,6 @@ const countBooksAndRuns = (number) => {
 
   // Calculate how many 'books' or 'runs' fit into the number
   while (number > 0) {
-    console.log(number)
     if (number >= 4) {
       if (number % 4 === 0) {  // If divisible by 4, add a run
         runs++;
@@ -29,10 +33,10 @@ const dealForRound = (roundNumber) => {
   let deal = 6
 
   if (roundNumber === 7) {
-    return { deal: 13, books: 4, runs: 3 }
+    return { deal: 13, books: 4 }
   }
   if (roundNumber === 8) {
-    return { deal: 13, books: 4 }
+    return { deal: 13, books: 4, runs: 3 }
   }
 
   deal = deal + roundNumber
@@ -56,17 +60,23 @@ const Collect = ({ round, books, runs }) => {
 }
 
 const Round = () => {
-  const { currentRound, players } = useGame()
-  const { deal, books, runs } = dealForRound(currentRound)
-  console.log({ books, runs })
+  const { players } = useGame()
+  const roundNumber = useRoundNumber()
+  const { deal, books, runs } = dealForRound(roundNumber)
+  const navigate = useNavigate()
 
   return (
-    <div>
-      <h1>Round {currentRound}</h1>
-      <Collect round={currentRound} {...{ books, runs }} />
-      <h2>{players[(currentRound % players.length) - 1].name} Deals</h2>
-      <p>Deal {deal} to each player</p>
-    </div>
+    <Layout>
+      <Grid stack space={20} split style={{ minHeight: '100dvh' }}>
+        <div>
+          <h1>Round {roundNumber}</h1>
+          <Collect round={roundNumber} {...{ books, runs }} />
+          <h2>{players[roundNumber % (players.length - 1)].name} Deals</h2>
+          <p>Deal {deal} to each player</p>
+        </div>
+        <Ariakit.Button style={{ fontSize: '1.5em' }} onClick={() => navigate('scores')}>Record Scores</Ariakit.Button>
+      </Grid>
+    </Layout>
   )
 }
 

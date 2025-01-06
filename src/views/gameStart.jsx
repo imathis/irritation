@@ -28,8 +28,7 @@ const GameStart = () => {
     navigate(resumePath, { replace: true })
   }
   const newGame = async () => {
-    await reset()
-    navigate('/players', { replace: true })
+    navigate('/new')
   }
   return (
     <Layout>

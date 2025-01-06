@@ -8,11 +8,12 @@ const spaceToPad = (props) => {
 
 export const Block = ({
   space = 0,
+  style: styleProp = {},
   ...rest
 }) => {
   const style = {
     padding: space ? spaceToPad(space) : null,
-    ...rest.style,
+    ...styleProp,
   };
 
   return <div {...rest} style={style} />
@@ -20,4 +21,5 @@ export const Block = ({
 
 Block.propTypes = {
   space: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
+  style: PropTypes.object,
 }

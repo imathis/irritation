@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware'
 const initializeGame = (opts = {}) => ({
   players: [],
   currentRound: 1,
+  finalRound: 8,
   scores: [],
   updatedAt: new Date(),
   ...opts,
@@ -39,10 +40,15 @@ const useGameStore = create(persist((set, get) => ({
     set((state) => {
       const targetRound = round || state.currentRound
 
+      if (!state.players[playerIndex]) {
+        console.error('Player not found')
+        return state
+      }
+
       // If this is a new winner, remove the previous winner's score for this round
-      let updatedScores = state.scores.filter(s =>
+      let updatedScores = isWinner ? state.scores.filter(s =>
         !(s.round === targetRound && s.isWinner)
-      )
+      ) : state.scores
 
       // Remove any existing score for this player in this round
       updatedScores = updatedScores.filter(s =>
@@ -52,13 +58,16 @@ const useGameStore = create(persist((set, get) => ({
       // Convert score to negative for non-winners
       const adjustedScore = isWinner ? 0 : -Math.abs(score)
 
-      // Add the new score
-      updatedScores = [...updatedScores, {
-        round: targetRound,
-        playerIndex,
-        score: adjustedScore,
-        isWinner
-      }]
+      // If score is valid update player's score
+      if (!Number.isNaN(adjustedScore)) {
+        // Add the new score
+        updatedScores = [...updatedScores, {
+          round: targetRound,
+          playerIndex,
+          score: adjustedScore,
+          isWinner
+        }]
+      }
 
       // Get all scores for the target round after adding the new score
       const roundScores = updatedScores.filter(s => s.round === targetRound)
@@ -81,30 +90,16 @@ const useGameStore = create(persist((set, get) => ({
     })
   },
 
-  advanceRound: () => {
-    set((state) => {
-      const currentRoundScores = state.scores.filter(s => s.round === state.currentRound)
-      const winner = currentRoundScores.find(s => s.isWinner)
-      const nonWinnerScores = currentRoundScores.filter(s => !s.isWinner)
-
-      // Only advance if we have a winner and all non-winning players have scores
-      if (winner && nonWinnerScores.length === state.players.length - 1) {
-        return {
-          currentRound: state.currentRound + 1,
-          updatedAt: new Date(),
-        }
-      }
-
-      console.warn('Cannot advance round: missing scores or winner')
-      return state
-    })
-  },
-
   getRoundScores: (round = null) => {
-    const { scores, currentRound, players } = get()
+    const { scores, currentRound } = get()
     const targetRound = round || currentRound
 
-    const roundScores = scores.filter(s => s.round === targetRound)
+    return scores.filter(s => s.round === targetRound)
+  },
+
+  getRoundPlayerScores: (round = null) => {
+    const { players, getRoundScores } = get()
+    const roundScores = getRoundScores(round)
 
     // Return scores for all players, even those without a score this round
     return players.map((player, index) => {
@@ -123,25 +118,71 @@ const useGameStore = create(persist((set, get) => ({
     })
   },
 
+  getRoundWinner: (round = null) => {
+    const { scores, currentRound, players } = get()
+    const targetRound = round || currentRound
+
+    const winnerScore = scores.find(s => s.round === targetRound && s.isWinner === true)
+    if (winnerScore) {
+      return {
+        name: players[winnerScore.playerIndex].name,
+        playerIndex: winnerScore.playerIndex,
+      }
+    }
+  },
+
+  // Round has a winner and each player has a score
+  getRoundScoresComplete: (round = null) => {
+    const { getRoundScores, getRoundWinner, players } = get()
+    return getRoundWinner(round) && getRoundScores(round).length === players.length
+  },
+
+  advanceRound: () => {
+    set((state) => {
+      const { getRoundScoresComplete } = get()
+
+      // Only advance if we have a winner all players have scores
+      if (getRoundScoresComplete()) {
+        return {
+          currentRound: state.currentRound + 1,
+          updatedAt: new Date(),
+        }
+      }
+
+      console.warn('Cannot advance round: missing scores or winner')
+      return state
+    })
+    return get().currentRound
+  },
+
+
   getStandings: (upToRound = null) => {
     const { players, scores, currentRound } = get()
     const maxRound = upToRound || currentRound
 
-    return players.map((_, playerIndex) => {
+    const playerScores = players.map((player, playerIndex) => {
       const playerScores = scores.filter(s =>
         s.playerIndex === playerIndex &&
         s.round <= maxRound
       )
 
-      const totalScore = playerScores.reduce((sum, s) => sum + s.score, 0)
+      const totalScore = playerScores.reduce((sum, { score }) => sum + score, 0)
       const wins = playerScores.filter(s => s.isWinner).length
 
+      const maxScore = Math.max(...players.map((_, idx) => {
+        const scoresForPlayer = scores.filter(s => s.playerIndex === idx && s.round <= maxRound);
+        return scoresForPlayer.reduce((sum, { score }) => sum + score, 0);
+      }));
+
       return {
+        player: player.name,
         playerIndex,
-        totalScore,
+        score: totalScore,
         wins,
+        isWinner: totalScore === maxScore,
       }
     }).sort((a, b) => b.totalScore - a.totalScore)
+    return playerScores
   },
 
   getAllRoundScores: () => {
@@ -151,6 +192,11 @@ const useGameStore = create(persist((set, get) => ({
       round,
       scores: get().getRoundScores(round)
     }))
+  },
+
+  getGameComplete: () => {
+    const { currentRound, getRoundScoresComplete } = get()
+    return currentRound === 8 && getRoundScoresComplete()
   },
 
   newGame: () => {
