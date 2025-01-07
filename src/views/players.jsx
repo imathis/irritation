@@ -2,10 +2,11 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import useGame from '../useGame'
 import { useState } from 'react'
+import { Block } from '../components/block'
 import * as Ariakit from "@ariakit/react"
 import { Layout } from '../components/layout'
 import { Grid } from '../components/grid'
-import { PaperRow, PaperPage } from '../components/paper'
+import { PaperRow, PaperPage, PaperNavButton } from '../components/paper'
 import './players.css'
 
 const DeletePlayer = ({ name, index }) => {
@@ -105,45 +106,41 @@ const SelectPlayers = () => {
   }
 
   return (
-    <Layout>
-      <PaperPage>
-        <Grid stack split style={{ minHeight: '100dvh' }}>
-          <div>
-            <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Players</PaperRow>
-            {players.map(({ name }, index) => (
-              <PaperRow
-                key={name}
-                rule={<DeletePlayer name={name} index={index} />}
-              >
-                <form onSubmit={handleEdit}>
-                  <input type="hidden" name="index" value={index} />
-                  <Grid templateColumns="1fr 50px" valign="center">
-                    <input
-                      name="name"
-                      defaultValue={name}
-                      type="text"
-                      required
-                      autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
-                      placeholder="Player Name"
-                      className="paper-input"
-                      onFocus={() => showEdit(index)}
-                      onBlur={() => setTimeout(() => showEdit((i) => i === index ? null : i), 100)}
-                    />
-                    {edit === index ? <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button> : null}
-                  </Grid>
-                </form>
-              </PaperRow>
-            ))}
-            <AddPlayer />
-          </div>
-          {players.length >= 3 ? (
-            <PaperRow line="false" space={24}>
-              <Ariakit.Button style={{ fontSize: '2em' }} onClick={startGame}>Start Game</Ariakit.Button>
+    <PaperPage>
+      <Grid stack split gap="15vh">
+        <div>
+          <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Players</PaperRow>
+          {players.map(({ name }, index) => (
+            <PaperRow
+              key={name}
+              rule={<DeletePlayer name={name} index={index} />}
+            >
+              <form onSubmit={handleEdit}>
+                <input type="hidden" name="index" value={index} />
+                <Grid templateColumns="1fr 50px" valign="center">
+                  <input
+                    name="name"
+                    defaultValue={name}
+                    type="text"
+                    required
+                    autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
+                    placeholder="Player Name"
+                    className="paper-input"
+                    onFocus={() => showEdit(index)}
+                    onBlur={() => setTimeout(() => showEdit((i) => i === index ? null : i), 100)}
+                  />
+                  {edit === index ? <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button> : null}
+                </Grid>
+              </form>
             </PaperRow>
-          ) : null}
-        </Grid>
-      </PaperPage>
-    </Layout>
+          ))}
+          <AddPlayer />
+        </div>
+        {players.length >= 3 ? (
+          <PaperNavButton onClick={startGame}>Start Game</PaperNavButton>
+        ) : null}
+      </Grid>
+    </PaperPage >
   )
 }
 

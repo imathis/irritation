@@ -9,7 +9,7 @@ import useGame from './useGame'
 
 const RoundRedirect = () => {
   const { currentRound } = useGame()
-  return <Navigate to={`/round/${currentRound}`} />
+  return <Navigate to={`/round/${currentRound}`} replace />
 }
 
 const NewGame = () => {

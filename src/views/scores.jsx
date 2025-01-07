@@ -1,10 +1,11 @@
 import * as Ariakit from '@ariakit/react'
 import { Grid } from '../components/grid'
 import { Layout } from '../components/layout'
-import { PaperPage, PaperRow } from '../components/paper'
+import { PaperPage, PaperRow, PaperNavButton } from '../components/paper'
 import { useNavigate } from 'react-router-dom'
 import { useRoundNumber } from './useRoundNumber'
 import useGame from '../useGame'
+import { InlineInput } from '../components/input'
 
 const ChooseWinner = ({ playerIndex }) => {
   const { getRoundWinner, addScore } = useGame()
@@ -13,6 +14,7 @@ const ChooseWinner = ({ playerIndex }) => {
   return (
     <Ariakit.Button
       onClick={() => addScore({ playerIndex, isWinner: true })}
+      tabIndex={-1}
       style={{
         fontSize: '3em',
         transform: 'translateY(.05em)',
@@ -34,7 +36,7 @@ const PlayerScore = ({ player, score, playerIndex, isWinner }) => {
     const data = Object.fromEntries(formData.entries())
     const { playerIndex, score } = data
 
-    addScore({ round: roundNumber, playerIndex: Number.parseInt(playerIndex, 10), score: Number.parseInt(score, 10) })
+    addScore({ round: roundNumber, playerIndex: Number.parseInt(playerIndex, 10), score })
   }
 
 
@@ -46,27 +48,22 @@ const PlayerScore = ({ player, score, playerIndex, isWinner }) => {
       {isWinner ? (
         <Grid space={[13, 26]} shelf split valign="center">
           <div>{player}</div>
-          <div style={{ textAlign: "right" }}>Winner!</div>
+          <div style={{ textAlign: 'right' }}>{score}</div>
         </Grid>
       ) : (
         <form onSubmit={handleSubmit}>
           <input type="hidden" name="playerIndex" value={playerIndex} />
-          <Grid space={[10, 0, 10, 26]} shelf split valign="center">
+          <Grid space={[10, 26]} templateColumns="1fr auto" valign="center">
             <label htmlFor={`scoreFor${playerIndex}`}>{player}</label>
-            <input
+            <InlineInput
               name="score"
-              defaultValue={Math.abs(score) || null}
+              defaultValue={score ? Math.abs(score) : null}
               id={`scoreFor${playerIndex}`}
               type="number"
               inputMode="numeric"
               autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
-              placeholder="Add"
-              onChange={(e) => {
-                const val = e.target.value;
-                if (!/^[0-9]*$/.test(val)) {
-                  e.target.value = val.replace(/[^0-9]/g, '');
-                }
-              }}
+              negative={!isWinner || null}
+              placeholder="___"
               className="paper-input"
               onBlur={handleSubmit}
               pattern="[0-9]*"
@@ -84,11 +81,13 @@ export const Scores = () => {
   const roundNumber = useRoundNumber()
   const scores = getRoundPlayerScores(roundNumber)
   const navigate = useNavigate()
+  const num = getRoundScoresComplete(roundNumber)
+  console.log(scores)
 
   return (
     <Layout>
       <PaperPage>
-        <Grid stack split style={{ minHeight: '100dvh' }}>
+        <Grid stack split style={{ minHeight: '100vh' }} space={[0, 0, '4vh']}>
           <div>
             <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Scores</PaperRow>
             {scores.map((score) => (
@@ -96,9 +95,7 @@ export const Scores = () => {
             ))}
           </div>
           {getRoundScoresComplete(roundNumber) ? (
-            <PaperRow line={false} space={24}>
-              <Ariakit.Button onClick={() => navigate('../standings')}>Standings &rarr;</Ariakit.Button>
-            </PaperRow>
+            <PaperNavButton onClick={() => navigate('../standings')}>Standings</PaperNavButton>
           ) : null}
         </Grid>
       </PaperPage>

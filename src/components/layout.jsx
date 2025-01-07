@@ -13,11 +13,11 @@ const styles = {
     paddingBottom: 'env(safe-area-inset-bottom)',
     paddingLeft: 'env(safe-area-inset-left)',
     paddingRight: 'env(safe-area-inset-right)',
-    minHeight: '100dvh',
+    minHeight: '100vh',
   }
 };
 
-export const Layout = ({ children }) => {
+export const Layout = ({ className, children }) => {
   const [isStandalone, setIsStandalone] = useState(false);
   const [orientation, setOrientation] = useState('portrait');
 
@@ -42,7 +42,7 @@ export const Layout = ({ children }) => {
       style={{
         ...styles.container,
       }}
-      className={`${isStandalone ? 'standalone' : ''} ${orientation}`}
+      className={`${isStandalone ? 'standalone' : ''} ${orientation} ${className || ''}`}
     >
       {/* <div style={{ height: '100%', overflowY: 'auto' }}> */}
       {children}

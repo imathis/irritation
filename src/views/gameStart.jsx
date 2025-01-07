@@ -1,10 +1,10 @@
-import useGame from '../useGame'
-import { Button } from "@ariakit/react"
 import { useNavigate } from 'react-router-dom'
-import { Layout } from '../components/layout'
-import { Title } from '../components/heading'
-import { Grid } from '../components/grid';
+import { MainButton } from '../components/button'
 import { CardFan } from '../components/cardFan'
+import { Grid } from '../components/grid'
+import { Title } from '../components/heading'
+import { Layout } from '../components/layout'
+import useGame from '../useGame'
 
 const useResumePath = () => {
   const { scores, currentRound } = useGame()
@@ -17,7 +17,7 @@ const useResumePath = () => {
 }
 
 const GameStart = () => {
-  const { players, reset } = useGame()
+  const { players } = useGame()
   const resumePath = useResumePath()
   const navigate = useNavigate()
 
@@ -41,12 +41,12 @@ const GameStart = () => {
           <CardFan cards={['7S', '7H', '7C']} />
         </div>
       </div>
-      <Grid align="center" rowGap={8} space={0}>
+      <Grid stack align="center" rowGap={8}>
         {players.length
-          ? <Button onClick={resumeGame}>Resume Game</Button>
-          : <Button onClick={startGame}>Begin Game</Button>
+          ? <MainButton onClick={resumeGame}>Resume Game</MainButton>
+          : <MainButton onClick={startGame}>Begin Game</MainButton>
         }
-        {players.length ? <Button onClick={newGame}>New Game</Button> : null}
+        {players.length ? <MainButton onClick={newGame}>New Game</MainButton> : null}
       </Grid>
     </Layout>
   )

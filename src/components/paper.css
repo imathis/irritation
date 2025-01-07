@@ -1,92 +1,77 @@
-.paper-line {
-  font-family: Bangers;
-  display: grid;
-  grid-template-columns: 17vw 1fr;
-  border-bottom: 1px solid rgba(255 255 255 / 0.2);
-  align-items: center;
-}
-
-.paper-line:first-child {
-  border-bottom: 3px solid rgba(255 255 255 / 0.7);
-}
-
-.paper-line:focus-within {
-  background-color: #00b2df47;
-}
-
-.round-winner,
-.round-winner:focus-within {
-  background-color: #00df1347;
-}
-
-.paper-row {
-  padding-left: 3px;
-  font-size: 2em;
-}
-
 .paper-page {
-  min-height: 100dvh;
+  --line-pos: 18vw;
+  --line-space: 24px;
+  --line-color: rgba(255 255 255 / 0.2)
+}
+
+@media (prefers-color-scheme: light) {
+  .paper-page {
+    --line-color: rgba(0 0 0 / 0.2)
+  }
 }
 
 .paper-page::before {
   content: '';
   position: fixed;
-  height: 100vh;
+  height: 150vh;
   top: 0;
-  left: 17vw;
+  left: var(--line-pos);
   bottom: 0;
   z-index: -1;
   border-left: 3px solid #00b2dfa0;
 }
 
-.paper-input {
+.paper-line {
+  font-family: Jua, serif;
+  display: grid;
+  grid-template-columns: var(--line-pos) 1fr;
+  border-bottom: 1px solid var(--line-color);
+  align-items: center;
+}
+
+.paper-line:first-child {
+  border-bottom: 3px solid var(--text-color);
   font-family: Bangers;
-  width: calc(100% - 3px);
-  background: none;
-  border: none;
-  font-size: inherit;
-  padding: 10px 24px;
-  outline: none;
+}
+
+.paper-line:focus-within {
+  background-color: #00b2df47;
+  background-color: hsla(201 78.4% 54.5% / 0.32);
+  border-bottom: solid 4px hsla(201 78.4% 54.5% / 0.82);
+  margin: -1px 0 -3px;
+  padding-top: 1px;
+}
+
+.round-winner,
+.round-winner:focus-within {
+  background-color: hsla(139 78.4% 54.5% / 0.62);
+}
+
+.paper-row {
+  padding-left: 3px;
+  font-size: 1.7em;
 }
 
 .paper-text-button {
-  padding: 10px 24px;
+  padding: 10px var(--line-space);
   background: none;
-  border: none;
   width: 100%;
   font-size: inherit;
+  font-family: 'Jua', serif;
   text-align: left;
   color: inherit;
   opacity: 0.1;
 }
 
+.paper-nav-button {
+  padding-left: calc(var(--line-pos) + var(--line-space));
+  text-align: left;
+  font-size: 2.5em;
+}
+
 .paper-button {
-  background: none;
-  border: none;
   color: inherit;
   font-size: inherit;
   padding: 5px;
-}
-
-.paper-button:focus {
-  outline: none;
-}
-
-fieldset {
-  border: none;
-  padding: 10px 0px 10px 24px;
-}
-
-input[type=number] {
-  text-align: right;
-  letter-spacing: 1.5px;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+  font-family: 'Jua', serif;
 }

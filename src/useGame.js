@@ -7,6 +7,7 @@ const initializeGame = (opts = {}) => ({
   finalRound: 8,
   scores: [],
   updatedAt: new Date(),
+  complete: false,
   ...opts,
 })
 
@@ -37,6 +38,8 @@ const useGameStore = create(persist((set, get) => ({
   },
 
   addScore: ({ playerIndex, score, isWinner = false, round = null }) => {
+    if (get().complete) return
+
     set((state) => {
       const targetRound = round || state.currentRound
 
@@ -55,18 +58,20 @@ const useGameStore = create(persist((set, get) => ({
         !(s.round === targetRound && s.playerIndex === playerIndex)
       )
 
-      // Convert score to negative for non-winners
-      const adjustedScore = isWinner ? 0 : -Math.abs(score)
+      if (score !== '') {
+        // Convert score to negative for non-winners
+        const adjustedScore = isWinner ? 0 : -Math.abs(score)
 
-      // If score is valid update player's score
-      if (!Number.isNaN(adjustedScore)) {
-        // Add the new score
-        updatedScores = [...updatedScores, {
-          round: targetRound,
-          playerIndex,
-          score: adjustedScore,
-          isWinner
-        }]
+        // If score is valid update player's score
+        if (!Number.isNaN(adjustedScore)) {
+          // Add the new score
+          updatedScores = [...updatedScores, {
+            round: targetRound,
+            playerIndex,
+            score: adjustedScore,
+            isWinner
+          }]
+        }
       }
 
       // Get all scores for the target round after adding the new score

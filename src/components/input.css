@@ -1,0 +1,39 @@
+.paper-input {
+  background: none;
+  border: none;
+  font-size: inherit;
+  outline: none;
+  display: inline-block;
+  font-family: inherit;
+}
+
+.paper-input-text {
+  outline: none;
+}
+
+.paper-input-placeholder {
+  position: absolute;
+  left: 0;
+  z-index: -1;
+}
+
+.hidden-input-span {
+  visibility: hidden !important;
+  position: absolute !important;
+  white-space: pre;
+}
+
+[data-negative]:after {
+  content: '-';
+  position: absolute;
+  left: .4em;
+}
+
+.inline-input input {
+  width: 100%;
+}
+
+label {
+  width: 100%;
+  cursor: pointer;
+}

@@ -1,5 +1,7 @@
 import './paper.css'
 import { Block } from './block'
+import { Layout } from './layout'
+import { MainButton } from './button'
 
 export const PaperRow = ({
   rule, space, className, line = true,
@@ -10,8 +12,12 @@ export const PaperRow = ({
     <Block className="paper-row" space={space} {...rest} />
   </div>
 )
+
+export const PaperNavButton = (props) => (
+  <MainButton className="paper-nav-button" {...props} />
+)
 export const PaperPage = ({ children }) => (
-  <div className='paper-page'>
+  <Layout className='paper-page'>
     {children}
-  </div>
+  </Layout>
 )

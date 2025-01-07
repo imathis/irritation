@@ -21,6 +21,7 @@ export const Grid = ({
   children,
   reverse,
   grow,
+  maxWidth,
   style: styleProp = {},
 }) => {
   const style = {
@@ -33,6 +34,7 @@ export const Grid = ({
     gridTemplateColumns: templateColumns,
     gridTemplateRows: templateRows,
     width: grow ? '100%' : null,
+    maxWidth: maxWidth ? defaultPx(maxWidth) : null,
     ...styleProp,
   };
   if (autoColumns) {
@@ -74,4 +76,6 @@ Grid.propTypes = {
   split: PropTypes.bool,
   reverse: PropTypes.bool,
   style: PropTypes.object,
+  grow: PropTypes.bool,
+  maxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
