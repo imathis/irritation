@@ -53,7 +53,7 @@ const Round = () => {
 
   return (
     <Layout className="splash-screen">
-      <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[20, 10]}>
+      <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[20, 10, 40]}>
         <RoundTitle {...{ books, runs, deal, round, dealer, }} />
         <ActionButton onClick={() => navigate('scores')}>Record Scores</ActionButton>
       </Grid>
