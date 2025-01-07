@@ -26,7 +26,9 @@ export const InlineInput = ({
   const handleChange = (e) => {
     setValue(e.target.value);
   };
-  const isNegative = value !== 0
+  const isNegative =
+    value !== 0
+    && value !== '0'
     && value !== ''
     && value !== null
     && negative
