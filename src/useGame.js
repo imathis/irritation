@@ -204,7 +204,7 @@ const useGameStore = create(persist((set, get) => ({
     return currentRound === 8 && getRoundScoresComplete()
   },
 
-  newGame: () => {
+  playAgain: () => {
     set((state) => initializeGame({
       players: state.players,
     }))

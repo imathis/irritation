@@ -1,11 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import useGame from '../useGame'
-import { Layout } from '../components/layout'
 import { useState } from 'react'
 import * as Ariakit from "@ariakit/react"
 import { Grid } from '../components/grid'
-import { PaperRow, PaperPage, PaperNavButton } from '../components/paper'
+import { PaperRow, PaperPage } from '../components/paper'
+import { ActionButton } from '../components/button'
 import './players.css'
 
 const DeletePlayer = ({ name, index }) => {
@@ -122,13 +122,13 @@ const SelectPlayers = () => {
                     defaultValue={name}
                     type="text"
                     required
-                    autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
+                    autoComplete="off" autoCorrect="off" spellCheck="false"
                     placeholder="Player Name"
                     className="paper-input"
                     onFocus={() => showEdit(index)}
                     onBlur={() => setTimeout(() => showEdit((i) => i === index ? null : i), 100)}
                   />
-                  <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button>
+                  {edit === index ? <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button> : null}
                 </Grid>
               </form>
             </PaperRow>
@@ -136,7 +136,7 @@ const SelectPlayers = () => {
           <AddPlayer />
         </div>
         {players.length >= 3 ? (
-          <PaperNavButton onClick={startGame}>Start Game</PaperNavButton>
+          <ActionButton onClick={startGame}>Start Game</ActionButton>
         ) : null}
       </Grid>
     </PaperPage >

@@ -27,7 +27,7 @@
 [data-negative]:after {
   content: '-';
   position: absolute;
-  left: .4em;
+  left: .5em;
 }
 
 .inline-input input {
@@ -36,4 +36,5 @@
 
 label {
   cursor: pointer;
+  width: 100%;
 }

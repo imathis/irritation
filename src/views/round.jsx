@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Grid } from '../components/grid';
 import { Layout } from '../components/layout'
 import { useRoundNumber } from './useRoundNumber'
-import * as Ariakit from '@ariakit/react'
+import { ActionButton } from '../components/button';
+import { RoundTitle } from '../components/title';
 
 const countBooksAndRuns = (number) => {
   let books = 0;
@@ -43,38 +44,18 @@ const dealForRound = (roundNumber) => {
   return { deal, ...countBooksAndRuns(deal - 1) }
 }
 
-const Collect = ({ round, books, runs }) => {
-  if (round === 8) {
-    return <h1>Collect {books} books or {runs} runs</h1>
-  }
-  if (books && runs) {
-    return <h1>Collect {books} {books === 1 ? 'book' : 'books'} and {runs} {runs === 1 ? 'run' : 'runs'}</h1>
-  }
-  if (books) {
-    return <h1>Collect {books} {books === 1 ? 'book' : 'books'}</h1>
-  }
-
-  if (runs) {
-    return <h1>Collect {runs} {runs === 1 ? 'run' : 'runs'}</h1>
-  }
-}
-
 const Round = () => {
   const { players } = useGame()
-  const roundNumber = useRoundNumber()
-  const { deal, books, runs } = dealForRound(roundNumber)
+  const round = useRoundNumber()
+  const { deal, books, runs } = dealForRound(round)
   const navigate = useNavigate()
+  const dealer = players[round % (players.length - 1)].name
 
   return (
-    <Layout>
-      <Grid stack space={20} split style={{ minHeight: '100dvh' }}>
-        <div>
-          <h1>Round {roundNumber}</h1>
-          <Collect round={roundNumber} {...{ books, runs }} />
-          <h2>{players[roundNumber % (players.length - 1)].name} Deals</h2>
-          <p>Deal {deal} to each player</p>
-        </div>
-        <Ariakit.Button style={{ fontSize: '1.5em' }} onClick={() => navigate('scores')}>Record Scores</Ariakit.Button>
+    <Layout className="splash-screen">
+      <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[20, 10]}>
+        <RoundTitle {...{ books, runs, deal, round, dealer, }} />
+        <ActionButton onClick={() => navigate('scores')}>Record Scores</ActionButton>
       </Grid>
     </Layout>
   )

@@ -12,13 +12,14 @@ const RoundRedirect = () => {
   return <Navigate to={`/round/${currentRound}`} replace />
 }
 
-const NewGame = () => {
-  const { reset } = useGame()
+const NewGame = ({ resetGame, restartGame }) => {
+  const { reset, playAgain } = useGame()
   const navigate = useNavigate()
   React.useEffect(() => {
-    reset()
+    if (resetGame) reset()
+    if (restartGame) playAgain()
     navigate('/players')
-  }, [navigate, reset])
+  }, [navigate, reset, playAgain])
 }
 
 function App() {
@@ -26,7 +27,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<GameStart />} />
-        <Route path="/new" element={<NewGame />} />
+        <Route path="/new" element={<NewGame reset />} />
+        <Route path="/again" element={<NewGame />} />
         <Route path="/players/*" element={<SelectPlayers />} />
         <Route path="/round/:roundNumber">
           <Route index element={<Round />} />

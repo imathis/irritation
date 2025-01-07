@@ -1,11 +1,11 @@
 import * as Ariakit from '@ariakit/react'
-import { Grid } from '../components/grid'
-import { Layout } from '../components/layout'
-import { PaperPage, PaperRow, PaperNavButton } from '../components/paper'
 import { useNavigate } from 'react-router-dom'
-import { useRoundNumber } from './useRoundNumber'
-import useGame from '../useGame'
+import { ActionButton } from '../components/button'
+import { Grid } from '../components/grid'
 import { InlineInput } from '../components/input'
+import { PaperPage, PaperRow } from '../components/paper'
+import useGame from '../useGame'
+import { useRoundNumber } from './useRoundNumber'
 
 const ChooseWinner = ({ playerIndex }) => {
   const { getRoundWinner, addScore } = useGame()
@@ -76,11 +76,27 @@ const PlayerScore = ({ player, score, playerIndex, isWinner }) => {
   )
 }
 
+const NextRound = () => {
+  const roundNumber = useRoundNumber()
+  const { getRoundScoresComplete, currentRound, advanceRound } = useGame()
+  const navigate = useNavigate()
+  if (!getRoundScoresComplete(roundNumber)) {
+    return
+  }
+  const nextRound = () => {
+    if (roundNumber === currentRound) advanceRound()
+    navigate('../round/2')
+  }
+  if (roundNumber === 1) {
+    return <ActionButton onClick={nextRound}>Next Round</ActionButton>
+  }
+  return <ActionButton onClick={() => navigate('../standings')}>Standings</ActionButton>
+}
+
 export const Scores = () => {
   const { getRoundPlayerScores, getRoundScoresComplete } = useGame()
   const roundNumber = useRoundNumber()
   const scores = getRoundPlayerScores(roundNumber)
-  const navigate = useNavigate()
 
   return (
     <PaperPage>
@@ -90,10 +106,13 @@ export const Scores = () => {
           {scores.map((score) => (
             <PlayerScore key={score.playerIndex} {...score} />
           ))}
+          {!getRoundScoresComplete(roundNumber) ? (
+            <PaperRow space={[15, 27]} style={{ fontSize: '1.2em' }} line={false}>
+              Tap * to choose a winner. Tap&nbsp;names to enter scores.
+            </PaperRow>
+          ) : null}
         </div>
-        {getRoundScoresComplete(roundNumber) ? (
-          <PaperNavButton onClick={() => navigate('../standings')}>Standings</PaperNavButton>
-        ) : null}
+        <NextRound />
       </Grid>
     </PaperPage>
   )

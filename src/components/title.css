@@ -44,6 +44,8 @@
   /* Force GPU acceleration */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  text-shadow: .18em .18em var(--title-shadow);
+  color: var(--title-color);
 
   /* Prevent blurry text */
   -webkit-font-smoothing: antialiased;
@@ -71,24 +73,10 @@
   animation-delay: 1.4s;
 }
 
-.heading-wrapper {
-  display: grid;
-}
-
-.heading {
-  border-radius: 3em;
-  padding: 15px 20px;
-  background: #111;
-  border: 1px solid #333;
-  display: inline-grid;
-  width: auto;
-  margin: 2em auto 0;
-  min-width: 75vw;
-  justify-content: center;
-}
-
-.heading h2 {
-  font-size: 1.5em;
-  margin: 0;
-  line-height: 1;
+.round-title {
+  font-family: 'Bangers';
+  max-width: 1000px;
+  transform: translateX(-2.5vw) rotate(-8deg);
+  text-shadow: .18em .18em var(--title-shadow);
+  color: var(--title-color);
 }
