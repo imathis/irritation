@@ -27,6 +27,7 @@
   grid-template-columns: var(--line-pos) 1fr;
   border-bottom: 1px solid var(--line-color);
   align-items: center;
+  min-height: 72px;
 }
 
 .paper-line:first-child {
@@ -35,10 +36,9 @@
 }
 
 .paper-line:focus-within {
-  background-color: #00b2df47;
   background-color: hsla(201 78.4% 54.5% / 0.32);
   border-bottom: solid 4px hsla(201 78.4% 54.5% / 0.82);
-  margin: -1px 0 -3px;
+  margin: 0 0 -3px;
   padding-top: 1px;
 }
 
@@ -47,9 +47,17 @@
   background-color: hsla(139 78.4% 54.5% / 0.62);
 }
 
+.round-winner:focus-within {
+  border-bottom: solid 4px hsla(139 78.4% 54.5% / 0.82);
+  margin: 0 0 -3px;
+}
+
 .paper-row {
-  padding-left: 3px;
   font-size: 1.7em;
+}
+
+.paper-line button:first-child {
+  min-height: 70px;
 }
 
 .paper-text-button {
@@ -72,6 +80,6 @@
 .paper-button {
   color: inherit;
   font-size: inherit;
-  padding: 5px;
+  padding: 0;
   font-family: 'Jua', serif;
 }

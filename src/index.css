@@ -5,7 +5,9 @@
 
   color-scheme: light dark;
   --text-color: rgba(255, 255, 255, 0.87);
-  --main-bg: #242424;
+  --main-bg: hsl(202 78.4% 18%);
+  --full-height: 100dvh;
+  --full-safe-height: calc(var(--full-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -76,9 +78,25 @@ button:focus {
   outline: none;
 }
 
+.splash-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(hsl(201 78.4% 28%), hsl(201 78.4% 10%));
+}
+
+.standalone {
+  --full-height: 100vh;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     --text-color: #242424;
     --main-bg: #f2f2f2;
+  }
+
+  .splash-screen::after {
+    background: linear-gradient(hsl(201 78.4% 88%), hsl(201 78.4% 20%));
   }
 }

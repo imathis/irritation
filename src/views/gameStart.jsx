@@ -31,7 +31,7 @@ const GameStart = () => {
     navigate('/new')
   }
   return (
-    <Layout>
+    <Layout className="splash-screen">
       <Title />
       <div className="card-fan-footer">
         <div className="card-fan-wrapper">

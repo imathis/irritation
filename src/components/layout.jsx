@@ -13,7 +13,7 @@ const styles = {
     paddingBottom: 'env(safe-area-inset-bottom)',
     paddingLeft: 'env(safe-area-inset-left)',
     paddingRight: 'env(safe-area-inset-right)',
-    minHeight: '100vh',
+    minHeight: 'var(--full-height)',
   }
 };
 

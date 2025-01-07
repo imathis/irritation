@@ -81,23 +81,20 @@ export const Scores = () => {
   const roundNumber = useRoundNumber()
   const scores = getRoundPlayerScores(roundNumber)
   const navigate = useNavigate()
-  const num = getRoundScoresComplete(roundNumber)
-  console.log(scores)
 
   return (
-    <Layout>
-      <PaperPage>
-        <Grid stack split style={{ minHeight: '100vh' }} space={[0, 0, '4vh']}>
-          <div>
-            <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Scores</PaperRow>
-            {scores.map((score) => (
-              <PlayerScore key={score.playerIndex} {...score} />
-            ))}
-          </div>
-          {getRoundScoresComplete(roundNumber) ? (
-            <PaperNavButton onClick={() => navigate('../standings')}>Standings</PaperNavButton>
-          ) : null}
-        </Grid>
-      </PaperPage>
-    </Layout>)
+    <PaperPage>
+      <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[0, 0, '5vh']}>
+        <div>
+          <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Scores</PaperRow>
+          {scores.map((score) => (
+            <PlayerScore key={score.playerIndex} {...score} />
+          ))}
+        </div>
+        {getRoundScoresComplete(roundNumber) ? (
+          <PaperNavButton onClick={() => navigate('../standings')}>Standings</PaperNavButton>
+        ) : null}
+      </Grid>
+    </PaperPage>
+  )
 }
