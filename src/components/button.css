@@ -2,9 +2,11 @@
   font-size: 7dvh;
   padding: 0.1em 0.8em;
   text-shadow: var(--action-button-shadow);
-  color: var(--action-button-color);
+  color: var(--main-button-color);
 }
 
 .action-button {
   font-size: 3em;
+  text-shadow: var(--action-button-shadow);
+  color: var(--action-button-color);
 }

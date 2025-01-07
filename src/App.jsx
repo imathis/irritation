@@ -28,7 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<GameStart />} />
         <Route path="/new" element={<NewGame reset />} />
-        <Route path="/again" element={<NewGame />} />
+        <Route path="/again" element={<NewGame restartGame />} />
         <Route path="/players/*" element={<SelectPlayers />} />
         <Route path="/round/:roundNumber">
           <Route index element={<Round />} />

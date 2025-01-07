@@ -33,12 +33,14 @@ const GameStart = () => {
   return (
     <Layout className="splash-screen">
       <MainTitle />
-      <div className="card-fan-footer">
-        <div className="card-fan-wrapper">
-          <CardFan cards={['10S', 'JH', 'QC', 'KD']} />
-        </div>
-        <div className="card-fan-wrapper">
-          <CardFan cards={['7S', '7H', '7C']} />
+      <div className="app-footer">
+        <div className="card-fan-footer">
+          <div className="card-fan-wrapper">
+            <CardFan cards={['10S', 'JH', 'QC', 'KD']} />
+          </div>
+          <div className="card-fan-wrapper">
+            <CardFan cards={['7S', '7H', '7C']} />
+          </div>
         </div>
       </div>
       <Grid stack align="center" style={{ transform: 'rotate(-8deg)' }}>

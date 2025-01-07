@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Grid } from '../components/grid';
 import { Layout } from '../components/layout'
 import { useRoundNumber } from './useRoundNumber'
-import { ActionButton } from '../components/button';
+import { MainButton } from '../components/button';
 import { RoundTitle } from '../components/title';
 
 const countBooksAndRuns = (number) => {
@@ -55,7 +55,7 @@ const Round = () => {
     <Layout className="splash-screen">
       <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[20, 10, 40]}>
         <RoundTitle {...{ books, runs, deal, round, dealer, }} />
-        <ActionButton onClick={() => navigate('scores')}>Record Scores</ActionButton>
+        <MainButton onClick={() => navigate('scores')}>Record Scores</MainButton>
       </Grid>
     </Layout>
   )

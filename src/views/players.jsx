@@ -74,7 +74,7 @@ const AddPlayer = () => {
             type="text"
             required
             aria-description="Type a player name to add"
-            autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
+            autoComplete="off" autoCorrect="off" spellCheck="false"
             placeholder={show ? 'Player Name' : 'Add Player'}
             className="paper-input"
             onFocus={() => setShow(true)}

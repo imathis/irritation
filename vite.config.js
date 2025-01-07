@@ -16,10 +16,11 @@ export default defineConfig({
       manifest: {
         name: 'Play Irritation',
         short_name: 'Irritation',
-        start_url: '/',
+        start_url: '.',
+        scope: '/',
         display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#000000',
+        background_color: '#0a3752',
+        theme_color: '#0a3752',
         icons: [
           {
             src: '/favicon-16x16.png',
@@ -41,7 +42,19 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/png'
           }
-        ]
+        ],
+        shortcuts: [
+          {
+            name: "New Game",
+            short_name: "New",
+            url: "/new",
+          },
+          {
+            name: "Select Players",
+            short_name: "Players",
+            url: "/players",
+          },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']

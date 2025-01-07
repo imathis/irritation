@@ -80,3 +80,8 @@
   text-shadow: .18em .18em var(--title-shadow);
   color: var(--title-color);
 }
+
+.round-title .round,
+.round-title .dealer {
+  color: var(--action-button-color);
+}

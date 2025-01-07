@@ -61,7 +61,7 @@ const PlayerScore = ({ player, score, playerIndex, isWinner }) => {
               id={`scoreFor${playerIndex}`}
               type="number"
               inputMode="numeric"
-              autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
+              autoComplete="off" autoCorrect="off" spellCheck="false"
               negative={!isWinner || null}
               placeholder="___"
               className="paper-input"

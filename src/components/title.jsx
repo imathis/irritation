@@ -4,18 +4,11 @@ import { pluralize } from '../helpers'
 
 export const formatBooksAndRuns = ({ books, runs }) => {
   const items = []
+  if (books) items.push(`${books} ${pluralize('book', books)}`)
+  if (runs) items.push(`${runs} ${pluralize('run', runs)}`)
 
-  if (books) {
-    items.push(`${books} ${pluralize('book', books)}`)
-  }
-
-  if (runs) {
-    items.push(`${runs} ${pluralize('run', runs)}`)
-  }
-
-  return items.sort((a, b) => {
-    parseInt(b) - parseInt(a)
-  })
+  if (runs > books) return items.reverse()
+  return items
 }
 
 const MainTitleText = () => {
@@ -89,6 +82,7 @@ const RoundTitleText = ({
         textAnchor="middle"
         alignmentBaseline="middle"
         fontSize="11"
+        className="round"
       >
         Round {round}
       </text>
@@ -110,6 +104,7 @@ const RoundTitleText = ({
         textAnchor="middle"
         alignmentBaseline="middle"
         fontSize="6.5"
+        className="dealer"
       >
         {dealer} Deals {deal} cards
       </text>

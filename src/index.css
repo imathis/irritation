@@ -108,7 +108,8 @@ button:focus {
     --main-bg: #f2f2f2;
     --title-color: hsl(201, 81%, 18%);
     --title-shadow: rgba(255 255 255 / 0.3);
-    --action-button-color: #fff;
+    --main-button-color: #fff;
+    --action-button-color: hsl(201, 81%, 18%);
   }
 
   .splash-screen::after {
