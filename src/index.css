@@ -10,6 +10,7 @@
   --full-safe-height: calc(var(--full-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   --title-color: #fff;
   --title-shadow: hsl(201 78.4% 10% / 50%);
+  --main-button-color: hsl(201 78.4% 78%);
   --action-button-color: hsl(201 78.4% 78%);
   --action-button-shadow: 4px 4px hsl(201 78.4% 10% / 50%);
 

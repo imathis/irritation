@@ -58,7 +58,8 @@ const useGameStore = create(persist((set, get) => ({
         !(s.round === targetRound && s.playerIndex === playerIndex)
       )
 
-      if (score !== '') {
+      if (isWinner || score !== '') {
+
         // Convert score to negative for non-winners
         const adjustedScore = isWinner ? 0 : -Math.abs(score)
 
