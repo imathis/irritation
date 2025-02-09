@@ -28,7 +28,7 @@ export const Menu = ({ fixed }) => {
       </Button>
       {showMenu ? (
         <div className="menu-panel">
-          <Grid gap={30} className="menu-panel-options">
+          <Grid gap={20} className="menu-panel-options">
             <MainButton onClick={editPlayers}>Edit Players</MainButton>
             <MainButton onClick={newGame}>New Game</MainButton>
           </Grid>

@@ -4,6 +4,7 @@ import { ActionButton } from '../components/button'
 import { useNavigate } from 'react-router-dom'
 import { useRoundNumber } from './useRoundNumber'
 import useGame from '../useGame'
+import { Menu } from './menu'
 
 const WinnerMark = ({ wins, isWinner }) => {
   const { getGameComplete, currentRound, finalRound } = useGame()
@@ -73,8 +74,8 @@ export const Standings = () => {
                   lineHeight: '1em',
                   textAlign: 'center',
                   paddingTop: '28px',
-                }}>wins</div>) : null}
-            space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>
+                }}>wins</div>) : <Menu />}
+            className="heading">
             {final ? 'Final Scores' : 'Standings'}
           </PaperRow>
           {scores.map((score) => (
