@@ -5,7 +5,9 @@
 
   color-scheme: light dark;
   --text-color: rgba(255, 255, 255, 0.87);
+  --light-text-color: rgba(255, 255, 255, 0.67);
   --main-bg: hsl(202 78.4% 18%);
+  --backdrop-bg: hsl(202 78.4% 08% / 0.7);
   --full-height: 100dvh;
   --full-safe-height: calc(var(--full-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   --title-color: #fff;
@@ -75,22 +77,6 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
-button {
-  border-radius: 8px;
-  padding: 0.3em 1.2em;
-  font-size: 1.8em;
-  font-family: inherit;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: Bangers;
-  color: inherit;
-}
-
-button:focus {
-  outline: none;
-}
-
 .splash-screen::after {
   content: "";
   position: fixed;
@@ -106,7 +92,9 @@ button:focus {
 @media (prefers-color-scheme: light) {
   :root {
     --text-color: #242424;
+    --light-text-color: hsl(201 81% 18% / 0.67);
     --main-bg: #f2f2f2;
+    --backdrop-bg: hsl(0 0% 77% / 0.7);
     --title-color: hsl(201, 81%, 18%);
     --title-shadow: rgba(255 255 255 / 0.3);
     --main-button-color: #fff;

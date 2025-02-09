@@ -31,12 +31,11 @@ const DeletePlayer = ({ name, id }) => {
         className="dialog"
       >
         <Ariakit.DialogHeading className="dialog-heading">
-          Delete Player {name}
+          Are you sure you want to remove this player from the game?
         </Ariakit.DialogHeading>
-        <p>Are you sure?</p>
-        <Grid shelf reverse gap={10}>
-          <Ariakit.DialogDismiss className="button">Cancel</Ariakit.DialogDismiss>
-          <Ariakit.Button onClick={() => handleDelete(id)} className="button">Delete</Ariakit.Button>
+        <Grid shelf reverse>
+          <Ariakit.Button onClick={() => handleDelete(id)} className="destructive-button">Remove</Ariakit.Button>
+          <Ariakit.DialogDismiss className="cancel-button">Cancel</Ariakit.DialogDismiss>
         </Grid>
       </Ariakit.Dialog>
     </>

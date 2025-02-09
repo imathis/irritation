@@ -10,7 +10,7 @@
   display: grid;
   inset: 0;
   z-index: 5;
-  background: hsla(0 0 0 / 0.7);
+  background: var(--backdrop-bg);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(4px);
   place-items: center;
@@ -19,6 +19,13 @@
 .menu-panel-options {
   margin: 0 auto;
   transform: rotate(-8deg);
+}
+
+.menu-panel-options button {
+  font-size: 7.5dvh;
+  padding: 0;
+  text-shadow: var(--action-button-shadow);
+  color: var(--action-button-color);
 }
 
 .menu-button {

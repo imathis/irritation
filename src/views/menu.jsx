@@ -1,6 +1,6 @@
 import { Grid } from "../components/grid";
 import { Button } from "@ariakit/react"
-import { MainButton } from "../components/button";
+import { ActionButton, MainButton } from "../components/button";
 
 import { useState } from 'react'
 import useGame from '../useGame'
@@ -29,8 +29,8 @@ export const Menu = ({ fixed }) => {
       {showMenu ? (
         <div className="menu-panel">
           <Grid gap={20} className="menu-panel-options">
-            <MainButton onClick={editPlayers}>Edit Players</MainButton>
-            <MainButton onClick={newGame}>New Game</MainButton>
+            <Button onClick={editPlayers}>Edit Players</Button>
+            <Button onClick={newGame}>New Game</Button>
           </Grid>
         </div>
       ) : null}

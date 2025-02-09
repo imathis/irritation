@@ -1,3 +1,19 @@
+button {
+  border-radius: 8px;
+  padding: 0.3em 1.2em;
+  font-size: 1.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: Bangers;
+  color: inherit;
+}
+
+button:focus {
+  outline: none;
+}
+
 .main-button {
   font-size: 7dvh;
   padding: 0.1em 0.8em;
@@ -6,7 +22,21 @@
 }
 
 .action-button {
-  font-size: 3em;
+  font-size: 7.5dvh;
   text-shadow: var(--action-button-shadow);
   color: var(--action-button-color);
+}
+
+.destructive-button {
+  color: #fd3535;
+}
+
+@media (prefers-color-scheme: light) {
+  .destructive-button {
+    color: #c42727;
+  }
+}
+
+.cancel-button {
+  color: var(--light-text-color);
 }
