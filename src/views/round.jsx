@@ -5,6 +5,7 @@ import { Layout } from '../components/layout'
 import { useRoundNumber } from './useRoundNumber'
 import { MainButton } from '../components/button';
 import { RoundTitle } from '../components/title';
+import { Menu } from './menu';
 
 const countBooksAndRuns = (number) => {
   let books = 0;
@@ -55,6 +56,7 @@ const Round = () => {
   return (
     <Layout className="splash-screen">
       <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[20, 10, 40]}>
+        <Menu fixed />
         <RoundTitle {...{ books, runs, deal, round, dealer, }} />
         <MainButton onClick={() => navigate('scores')}>Record Scores</MainButton>
       </Grid>

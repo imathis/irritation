@@ -35,12 +35,21 @@
   min-height: 72px;
 }
 
+.paper-line.heading {
+  padding: 10px 0 0;
+  font-size: 1.75em;
+}
+
+.paper-line.heading .paper-row {
+  padding-left: 27px;
+}
+
 .paper-line:first-child {
   border-bottom: 3px solid var(--text-color);
   font-family: Bangers;
 }
 
-.paper-line:focus-within {
+.paper-line:not(.heading):focus-within {
   background-color: hsla(201 78.4% 54.5% / 0.32);
   border-bottom: solid 4px hsla(201 78.4% 54.5% / 0.82);
   margin: 0 0 -3px;

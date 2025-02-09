@@ -22,6 +22,7 @@ export const Grid = ({
   reverse,
   grow,
   maxWidth,
+  className,
   style: styleProp = {},
 }) => {
   const style = {
@@ -58,7 +59,7 @@ export const Grid = ({
   if (reverse) {
     style.direction = 'rtl'
   }
-  return <div style={style}>{children}</div>;
+  return <div className={className} style={style}>{children}</div>;
 };
 
 Grid.propTypes = {

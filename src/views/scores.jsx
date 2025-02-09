@@ -6,6 +6,7 @@ import { InlineInput } from '../components/input'
 import { PaperPage, PaperRow } from '../components/paper'
 import useGame from '../useGame'
 import { useRoundNumber } from './useRoundNumber'
+import { Menu } from './menu'
 
 const ChooseWinner = ({ playerId }) => {
   const { getRoundWinner, addScore } = useGame()
@@ -102,9 +103,10 @@ export const Scores = () => {
 
   return (
     <PaperPage>
+      <Menu fixed />
       <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[0, 0, '5vh']}>
         <div>
-          <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Scores</PaperRow>
+          <PaperRow className="heading">Scores</PaperRow>
           {scores.map((score) => (
             <PlayerScore key={score.playerId} {...score} />
           ))}
