@@ -8,11 +8,11 @@ import { PaperRow, PaperPage } from '../components/paper'
 import { ActionButton } from '../components/button'
 import './players.css'
 
-const DeletePlayer = ({ name, index }) => {
+const DeletePlayer = ({ name, id }) => {
   const [show, setShow] = useState(false)
   const { scores, deletePlayer } = useGame()
-  const handleDelete = (index) => {
-    deletePlayer(index)
+  const handleDelete = (id) => {
+    deletePlayer(id)
     setShow(false)
   }
 
@@ -22,7 +22,7 @@ const DeletePlayer = ({ name, index }) => {
         if (scores.length) {
           setShow(true)
         } else {
-          handleDelete(index)
+          handleDelete(id)
         }
       }}>X</Ariakit.Button>
       <Ariakit.Dialog
@@ -36,7 +36,7 @@ const DeletePlayer = ({ name, index }) => {
         <p>Are you sure?</p>
         <Grid shelf reverse gap={10}>
           <Ariakit.DialogDismiss className="button">Cancel</Ariakit.DialogDismiss>
-          <Ariakit.Button onClick={() => handleDelete(index)} className="button">Delete</Ariakit.Button>
+          <Ariakit.Button onClick={() => handleDelete(id)} className="button">Delete</Ariakit.Button>
         </Grid>
       </Ariakit.Dialog>
     </>
@@ -89,33 +89,34 @@ const AddPlayer = () => {
 }
 
 const SelectPlayers = () => {
-  const { players, updatePlayer } = useGame()
+  const { getActivePlayers, updatePlayer, scores } = useGame()
   const navigate = useNavigate()
   const [edit, showEdit] = React.useState()
   const handleEdit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target)
-    const { name, index } = Object.fromEntries(formData.entries())
-    updatePlayer(Number.parseInt(index, 10), name)
+    const { name, id } = Object.fromEntries(formData.entries())
+    updatePlayer(id, name)
     showEdit(null)
   }
 
   const startGame = () => {
     navigate('/round')
   }
+  const players = getActivePlayers()
 
   return (
     <PaperPage>
       <Grid stack split style={{ minHeight: 'var(--full-safe-height)' }} space={[0, 0, '5vh']}>
         <div>
           <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Players</PaperRow>
-          {players.map(({ name }, index) => (
+          {players.map(({ name, id }) => (
             <PaperRow
               key={name}
-              rule={<DeletePlayer name={name} index={index} />}
+              rule={<DeletePlayer name={name} id={id} />}
             >
               <form onSubmit={handleEdit}>
-                <input type="hidden" name="index" value={index} />
+                <input type="hidden" name="id" value={id} />
                 <Grid space={[10, 20]} templateColumns="1fr auto" valign="center">
                   <input
                     name="name"
@@ -125,10 +126,10 @@ const SelectPlayers = () => {
                     autoComplete="off" autoCorrect="off" spellCheck="false"
                     placeholder="Player Name"
                     className="paper-input"
-                    onFocus={() => showEdit(index)}
-                    onBlur={() => setTimeout(() => showEdit((i) => i === index ? null : i), 100)}
+                    onFocus={() => showEdit(id)}
+                    onBlur={() => setTimeout(() => showEdit((i) => i === id ? null : i), 100)}
                   />
-                  {edit === index ? <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button> : null}
+                  {edit === id ? <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button> : null}
                 </Grid>
               </form>
             </PaperRow>
@@ -136,7 +137,7 @@ const SelectPlayers = () => {
           <AddPlayer />
         </div>
         {players.length >= 3 ? (
-          <ActionButton onClick={startGame}>Start Game</ActionButton>
+          <ActionButton onClick={startGame}>{scores.length ? 'Resume' : 'Start'} Game</ActionButton>
         ) : null}
       </Grid>
     </PaperPage >

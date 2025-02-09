@@ -7,25 +7,25 @@ import { PaperPage, PaperRow } from '../components/paper'
 import useGame from '../useGame'
 import { useRoundNumber } from './useRoundNumber'
 
-const ChooseWinner = ({ playerIndex }) => {
+const ChooseWinner = ({ playerId }) => {
   const { getRoundWinner, addScore } = useGame()
   const roundNumber = useRoundNumber()
   const winner = getRoundWinner(roundNumber)
   return (
     <Ariakit.Button
-      onClick={() => addScore({ playerIndex, isWinner: true })}
+      onClick={() => addScore({ playerId, isWinner: true })}
       tabIndex={-1}
       style={{
         fontSize: '3em',
         transform: 'translateY(.05em)',
-        opacity: winner?.playerIndex === playerIndex ? 1 : 0.3
+        opacity: winner?.playerId === playerId ? 1 : 0.3
       }}
       className="paper-button">*</Ariakit.Button>
   )
 }
 
-const PlayerScore = ({ player, score, playerIndex, isWinner }) => {
-  const { addScore } = useGame()
+const PlayerScore = ({ score, playerId, isWinner }) => {
+  const { addScore, getPlayer } = useGame()
   const roundNumber = useRoundNumber()
   const handleSubmit = (event) => {
     const form = event.target.closest('form')
@@ -34,31 +34,33 @@ const PlayerScore = ({ player, score, playerIndex, isWinner }) => {
     }
     const formData = new FormData(form)
     const data = Object.fromEntries(formData.entries())
-    const { playerIndex, score } = data
+    const { playerId, score } = data
 
-    addScore({ round: roundNumber, playerIndex: Number.parseInt(playerIndex, 10), score })
+    addScore({ round: roundNumber, playerId, score })
   }
+
+  const player = getPlayer(playerId)
 
 
   return (
     <PaperRow
-      rule={<ChooseWinner playerIndex={playerIndex} />}
+      rule={<ChooseWinner playerId={playerId} />}
       className={isWinner ? 'round-winner' : null}
     >
       {isWinner ? (
         <Grid space={[13, 26]} shelf split valign="center">
-          <div>{player}</div>
+          <div>{player.name}</div>
           <div style={{ textAlign: 'right' }}>{score}</div>
         </Grid>
       ) : (
         <form onSubmit={handleSubmit}>
-          <input type="hidden" name="playerIndex" value={playerIndex} />
+          <input type="hidden" name="playerId" value={playerId} />
           <Grid space={[10, 26]} templateColumns="1fr auto" valign="center">
-            <label htmlFor={`scoreFor${playerIndex}`}>{player}</label>
+            <label htmlFor={`scoreFor${playerId}`}>{player.name}</label>
             <InlineInput
               name="score"
               defaultValue={score ? Math.abs(score) : null}
-              id={`scoreFor${playerIndex}`}
+              id={`scoreFor${playerId}`}
               type="number"
               inputMode="numeric"
               autoComplete="off" autoCorrect="off" spellCheck="false"
@@ -104,7 +106,7 @@ export const Scores = () => {
         <div>
           <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Scores</PaperRow>
           {scores.map((score) => (
-            <PlayerScore key={score.playerIndex} {...score} />
+            <PlayerScore key={score.playerId} {...score} />
           ))}
           {!getRoundScoresComplete(roundNumber) ? (
             <PaperRow space={[15, 27]} style={{ fontSize: '1.2em' }} line={false}>

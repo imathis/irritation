@@ -45,11 +45,12 @@ const dealForRound = (roundNumber) => {
 }
 
 const Round = () => {
-  const { players } = useGame()
+  const { getDealer } = useGame()
   const round = useRoundNumber()
   const { deal, books, runs } = dealForRound(round)
   const navigate = useNavigate()
-  const dealer = players[round % (players.length - 1)].name
+  // TODO: Pick dealer from API somehow
+  const dealer = getDealer().name
 
   return (
     <Layout className="splash-screen">

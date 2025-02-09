@@ -8,6 +8,7 @@ const initializeGame = (opts = {}) => ({
   scores: [],
   updatedAt: new Date(),
   complete: false,
+  dealerId: null,
   ...opts,
 })
 
@@ -15,35 +16,57 @@ const useGameStore = create(persist((set, get) => ({
   ...initializeGame(),
 
   addPlayer: (name) => {
+    const id = `id${Math.random().toString(16).slice(2)}`
     set((state) => ({
-      players: [...state.players, { name }],
+      players: [...state.players, { id, name, active: true }],
       updatedAt: new Date(),
+      // dealerId: state.players.length ? state.dealerId : id,
     }))
   },
 
-  updatePlayer: (index, name) => {
+  updatePlayer: (id, name) => {
     set((state) => ({
-      players: state.players.map((player, i) =>
-        i === index ? { name } : player
+      players: state.players.map((player) =>
+        id === player.id ? { ...player, name } : player
       ),
       updatedAt: new Date(),
     }))
   },
 
-  deletePlayer: (index) => {
-    set((state) => ({
-      players: state.players.filter((_, i) => i !== index),
-      updatedAt: new Date(),
-    }))
+  deletePlayer: (id) => {
+    set((state) => {
+      // If scores have been entered, removing the player simply makes them inactive.
+      if (state.scores.length) {
+        return ({
+          players: state.players.map((player) => player.id === id ? ({ ...player, active: false }) : player),
+          updatedAt: new Date(),
+        })
+      }
+      // Remove the player from the list
+      return ({
+        players: state.players.filter((player) => player.id !== id),
+        updatedAt: new Date(),
+      })
+    })
   },
 
-  addScore: ({ playerIndex, score, isWinner = false, round = null }) => {
+  getActivePlayers: () => {
+    const { players } = get()
+    return players.filter(({ active }) => active)
+  },
+
+  getPlayer: (id) => {
+    const { players } = get()
+    return players.find((p) => p.id === id)
+  },
+
+  addScore: ({ playerId, score, isWinner = false, round = null }) => {
     if (get().complete) return
 
     set((state) => {
       const targetRound = round || state.currentRound
 
-      if (!state.players[playerIndex]) {
+      if (!state.players.find(({ id }) => id === playerId)) {
         console.error('Player not found')
         return state
       }
@@ -55,7 +78,7 @@ const useGameStore = create(persist((set, get) => ({
 
       // Remove any existing score for this player in this round
       updatedScores = updatedScores.filter(s =>
-        !(s.round === targetRound && s.playerIndex === playerIndex)
+        !(s.round === targetRound && s.playerId === playerId)
       )
 
       if (isWinner || score !== '') {
@@ -68,7 +91,7 @@ const useGameStore = create(persist((set, get) => ({
           // Add the new score
           updatedScores = [...updatedScores, {
             round: targetRound,
-            playerIndex,
+            playerId,
             score: adjustedScore,
             isWinner
           }]
@@ -104,15 +127,16 @@ const useGameStore = create(persist((set, get) => ({
   },
 
   getRoundPlayerScores: (round = null) => {
-    const { players, getRoundScores } = get()
+    const { getActivePlayers, getRoundScores } = get()
     const roundScores = getRoundScores(round)
+    const players = getActivePlayers()
 
     // Return scores for all players, even those without a score this round
-    return players.map((player, index) => {
-      const scoreEntry = roundScores.find(s => s.playerIndex === index)
+    return players.map((player) => {
+      const scoreEntry = roundScores.find(s => s.playerId === player.id)
       return {
         player: player.name,
-        playerIndex: index,
+        playerId: player.id,
         ...scoreEntry ? {
           score: scoreEntry.score,
           isWinner: scoreEntry.isWinner
@@ -131,26 +155,70 @@ const useGameStore = create(persist((set, get) => ({
     const winnerScore = scores.find(s => s.round === targetRound && s.isWinner === true)
     if (winnerScore) {
       return {
-        name: players[winnerScore.playerIndex].name,
-        playerIndex: winnerScore.playerIndex,
+        name: players.find(({ id }) => id === winnerScore.playerId).name,
+        playerId: winnerScore.playerId,
       }
     }
   },
 
   // Round has a winner and each player has a score
   getRoundScoresComplete: (round = null) => {
-    const { getRoundScores, getRoundWinner, players } = get()
-    return getRoundWinner(round) && getRoundScores(round).length === players.length
+    const { getRoundScores, getRoundWinner, getActivePlayers } = get()
+    return getRoundWinner(round) && getRoundScores(round).length === getActivePlayers().length
+  },
+
+  getDealer: () => {
+    const { dealerId, players, getPlayer, getNextDealer } = get()
+    if (!dealerId) {
+      const dealer = players.find(({ active }) => active)
+      set((state) => ({
+        ...state,
+        dealerId: dealer.id,
+      }))
+
+      return dealer
+    } else if (!getPlayer(dealerId).active) {
+      const dealer = getNextDealer()
+      set((state) => ({
+        ...state,
+        dealerId: dealer.id,
+      }))
+      return dealer
+    }
+    return getPlayer(dealerId)
+  },
+
+  getNextDealer: () => {
+    const { players, dealerId } = get()
+
+    // Find the index of the current dealer
+    const dealerIndex = players.findIndex(player => player.id === dealerId)
+    let nextIndex = (dealerIndex + 1) % players.length;
+
+    // Loop until we find an active player or return to the start
+    while (!players[nextIndex].active) {
+      nextIndex = (nextIndex + 1) % players.length;
+      // If we circle back to the current dealer, no active player found
+      if (nextIndex === dealerIndex) {
+        return null; // or handle as no active player available
+      }
+    }
+
+    // Return the new dealer's id
+    return players[nextIndex]
   },
 
   advanceRound: () => {
+    const { getNextDealer } = get()
     set((state) => {
       const { getRoundScoresComplete } = get()
 
       // Only advance if we have a winner all players have scores
       if (getRoundScoresComplete()) {
+        const { id: dealerId } = getNextDealer()
         return {
           currentRound: state.currentRound + 1,
+          dealerId,
           updatedAt: new Date(),
         }
       }
@@ -166,23 +234,23 @@ const useGameStore = create(persist((set, get) => ({
     const { players, scores, currentRound } = get()
     const maxRound = upToRound || currentRound
 
-    const playerScores = players.map((player, playerIndex) => {
+    const playerScores = players.map((player) => {
       const playerScores = scores.filter(s =>
-        s.playerIndex === playerIndex &&
+        s.playerId === player.id &&
         s.round <= maxRound
       )
 
       const totalScore = playerScores.reduce((sum, { score }) => sum + score, 0)
       const wins = playerScores.filter(s => s.isWinner).length
 
-      const maxScore = Math.max(...players.map((_, idx) => {
-        const scoresForPlayer = scores.filter(s => s.playerIndex === idx && s.round <= maxRound);
+      const maxScore = Math.max(...players.map((player) => {
+        const scoresForPlayer = scores.filter(s => s.playerId === player.id && s.round <= maxRound);
         return scoresForPlayer.reduce((sum, { score }) => sum + score, 0);
       }));
 
       return {
         player: player.name,
-        playerIndex,
+        playerId: player.id,
         score: totalScore,
         wins,
         isWinner: totalScore === maxScore,

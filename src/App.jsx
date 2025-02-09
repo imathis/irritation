@@ -27,7 +27,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<GameStart />} />
-        <Route path="/new" element={<NewGame reset />} />
+        <Route path="/new" element={<NewGame resetGame />} />
         <Route path="/again" element={<NewGame restartGame />} />
         <Route path="/players/*" element={<SelectPlayers />} />
         <Route path="/round/:roundNumber">

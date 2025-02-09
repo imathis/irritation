@@ -36,8 +36,8 @@ const PlayerScore = ({ player, score, isWinner, wins }) => {
       rule={<WinnerMark wins={wins} isWinner={isWinner} />}
       className={isWinner ? 'round-winner' : null}
     >
-      <Grid space={[10, 26]} shelf split valign="center">
-        <div>{player}</div>
+      <Grid space={[10, 26]} shelf split valign="center" style={{ opacity: player.active ? 1 : '0.5' }}>
+        <div>{player.name}</div>
         <div style={{ textAlign: "right" }}>{score}</div>
       </Grid>
     </PaperRow>
@@ -45,7 +45,7 @@ const PlayerScore = ({ player, score, isWinner, wins }) => {
 }
 
 export const Standings = () => {
-  const { getStandings, reset, getGameComplete, advanceRound, currentRound } = useGame()
+  const { getStandings, getPlayer, getGameComplete, advanceRound, currentRound } = useGame()
   const roundNumber = useRoundNumber()
   const scores = getStandings(roundNumber)
   const navigate = useNavigate()
@@ -78,7 +78,7 @@ export const Standings = () => {
             {final ? 'Final Scores' : 'Standings'}
           </PaperRow>
           {scores.map((score) => (
-            <PlayerScore key={score.playerIndex} {...score} />
+            <PlayerScore key={score.playerId} {...score} player={getPlayer(score.playerId)} />
           ))}
         </div>
         {final ? (
