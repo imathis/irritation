@@ -70,10 +70,10 @@ export const Standings = () => {
             rule={final ? (
               <div
                 style={{
-                  fontSize: '1.8em',
-                  lineHeight: '1em',
+                  fontSize: '1em',
+                  lineHeight: '2em',
                   textAlign: 'center',
-                  paddingTop: '28px',
+                  paddingTop: '10px',
                 }}>wins</div>) : <Menu />}
             className="heading">
             {final ? 'Final Scores' : 'Standings'}

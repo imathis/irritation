@@ -35,8 +35,8 @@ const useGameStore = create(persist((set, get) => ({
 
   deletePlayer: (id) => {
     set((state) => {
-      // If scores have been entered, removing the player simply makes them inactive.
-      if (state.scores.length) {
+      // If a player has a score, removing the player simply makes them inactive.
+      if (state.scores.find((s) => s.playerId === id)) {
         return ({
           players: state.players.map((player) => player.id === id ? ({ ...player, active: false }) : player),
           updatedAt: new Date(),

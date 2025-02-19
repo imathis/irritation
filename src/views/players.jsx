@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import useGame from '../useGame'
 import { useState } from 'react'
 import * as Ariakit from "@ariakit/react"
@@ -90,6 +90,7 @@ const AddPlayer = () => {
 const SelectPlayers = () => {
   const { getActivePlayers, updatePlayer, scores } = useGame()
   const navigate = useNavigate()
+  const location = useLocation()
   const [edit, showEdit] = React.useState()
   const handleEdit = (event) => {
     event.preventDefault();
@@ -100,7 +101,7 @@ const SelectPlayers = () => {
   }
 
   const startGame = () => {
-    navigate('/round')
+    navigate(location.state?.from || '/round');
   }
   const players = getActivePlayers()
 

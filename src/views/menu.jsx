@@ -1,19 +1,19 @@
 import { Grid } from "../components/grid";
 import { Button } from "@ariakit/react"
-import { ActionButton, MainButton } from "../components/button";
 
 import { useState } from 'react'
 import useGame from '../useGame'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './menu.css'
 
 export const Menu = ({ fixed }) => {
-  const { reset, playAgain } = useGame()
+  const { reset } = useGame()
   const navigate = useNavigate()
+  const location = useLocation()
   const [showMenu, setShowMenu] = useState(false)
 
   const editPlayers = () => {
-    navigate('/players', { replace: true })
+    navigate('/players', { replace: true, state: { from: location.pathname } })
   }
 
   const newGame = async () => {
