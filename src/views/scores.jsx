@@ -35,7 +35,6 @@ const getFormData = (event) => {
 
 const validateInput = (input) => {
   const score = parseInt(input.value, 10)
-  console.log([input.value, input.value !== '', isNaN(score), score % 5 !== 0])
 
   if (input.value !== '' && (isNaN(score) || score % 5 !== 0)) {
     const message = 'Must be divisible by 5'
@@ -43,11 +42,10 @@ const validateInput = (input) => {
     input.reportValidity()
     input.focus()
     return false
-  } else {
-    delete input.dataset.message
-    input.setCustomValidity('')
   }
 
+  input.setCustomValidity('')
+  return true
 }
 
 const PlayerScore = ({ score, playerId, isWinner }) => {

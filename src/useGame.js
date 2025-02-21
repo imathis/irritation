@@ -255,7 +255,7 @@ const useGameStore = create(persist((set, get) => ({
         wins,
         isWinner: totalScore === maxScore,
       }
-    }).sort((a, b) => b.totalScore - a.totalScore)
+    }).sort((a, b) => b.score - a.score)
     return playerScores
   },
 
