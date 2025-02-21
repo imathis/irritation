@@ -54,7 +54,25 @@
   border-bottom: solid 4px hsla(201 78.4% 54.5% / 0.82);
   margin: 0 0 -3px;
   padding-top: 1px;
+  position: relative;
+  z-index: 1;
 }
+
+.paper-line:has(input:invalid),
+.paper-line:has(input:invalid):focus-within {
+  background-color: hsla(0 78.4% 54.5% / 0.32);
+  border-bottom: solid 4px hsla(0 78.4% 54.5% / 0.82);
+}
+
+.paper-line input[data-message]:before {
+  content: attr(data-message);
+  display: block;
+  font-size: 1em;
+  color: #fff;
+  /*position: absolute;*/
+  z-index: 12;
+}
+
 
 .round-winner,
 .round-winner:focus-within {

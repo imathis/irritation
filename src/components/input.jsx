@@ -6,6 +6,7 @@ export const InlineInput = ({
   placeholder,
   defaultValue = '',
   negative,
+  errorMessage,
   ...rest
 }) => {
   const [value, setValue] = React.useState(defaultValue);
@@ -13,7 +14,7 @@ export const InlineInput = ({
   const inputRef = React.useRef(null);
   const [width, setWidth] = React.useState(0);
 
-  const getWidth = (w) => `calc(1em + ${w}px)`
+  const getWidth = (w) => `calc(1.1em + ${w}px)`
 
   React.useLayoutEffect(() => {
     if (hiddenSpan.current) {
@@ -25,7 +26,7 @@ export const InlineInput = ({
 
   const handleChange = (e) => {
     setValue(e.target.value);
-  };
+  }
   const isNegative =
     value !== 0
     && value !== '0'
@@ -35,6 +36,7 @@ export const InlineInput = ({
 
   return (
     <div data-negative={isNegative || null} className='inline-input' style={{ position: 'relative', display: 'inline-block' }}>
+      {/* {errorMessage ? <span className="input-error-message">{errorMessage}</span> : null} */}
       <span
         ref={hiddenSpan}
         aria-hidden="true"
@@ -63,4 +65,5 @@ InlineInput.propTypes = {
   defaultValue: PropTypes.any,
   placeholder: PropTypes.string,
   negative: PropTypes.bool,
+  errorMessage: PropTypes.string,
 }

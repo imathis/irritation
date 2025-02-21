@@ -4,6 +4,7 @@ import { ActionButton } from '../components/button'
 import { Grid } from '../components/grid'
 import { InlineInput } from '../components/input'
 import { PaperPage, PaperRow } from '../components/paper'
+import { useState } from 'react'
 import useGame from '../useGame'
 import { useRoundNumber } from './useRoundNumber'
 import { Menu } from './menu'
@@ -25,19 +26,52 @@ const ChooseWinner = ({ playerId }) => {
   )
 }
 
+const getFormData = (event) => {
+  const form = event.target.closest('form')
+  const formData = new FormData(form)
+  const { score, ...rest } = Object.fromEntries(formData.entries())
+  return { ...rest, score: parseInt(score, 10) }
+}
+
+const validateInput = (input) => {
+  const score = parseInt(input.value, 10)
+  console.log([input.value, input.value !== '', isNaN(score), score % 5 !== 0])
+
+  if (input.value !== '' && (isNaN(score) || score % 5 !== 0)) {
+    const message = 'Must be divisible by 5'
+    input.setCustomValidity(message);
+    input.reportValidity()
+    input.focus()
+    return false
+  } else {
+    delete input.dataset.message
+    input.setCustomValidity('')
+  }
+
+}
+
 const PlayerScore = ({ score, playerId, isWinner }) => {
   const { addScore, getPlayer } = useGame()
   const roundNumber = useRoundNumber()
+  const [errorMessage, setErrorMessage] = useState()
   const handleSubmit = (event) => {
-    const form = event.target.closest('form')
-    if (event.target === form) {
-      event.preventDefault()
-    }
-    const formData = new FormData(form)
-    const data = Object.fromEntries(formData.entries())
-    const { playerId, score } = data
+    const { playerId, score } = getFormData(event)
+    const input = event.target.closest('form input[name=score]')
 
-    addScore({ round: roundNumber, playerId, score })
+    if (event.target.matches('form')) { event.preventDefault() }
+
+    if (validateInput(input)) {
+      addScore({ round: roundNumber, playerId, score })
+    }
+
+    setErrorMessage(input.validity.valid ? '' : input.validationMessage)
+  }
+
+  const handleChange = (event) => {
+    if (!event.target.checkValidity()) {
+      validateInput(event.target)
+      setErrorMessage(event.target.validity.valid ? '' : event.target.validationMessage)
+    }
   }
 
   const player = getPlayer(playerId)
@@ -68,9 +102,10 @@ const PlayerScore = ({ score, playerId, isWinner }) => {
               negative={!isWinner || null}
               placeholder="___"
               className="paper-input"
+              errorMessage={errorMessage}
               onBlur={handleSubmit}
-              pattern="[0-9]*"
-              required
+              onChange={handleChange}
+              onInvalid={e => e.preventDefault()}
             />
           </Grid>
         </form>

@@ -24,7 +24,7 @@
   white-space: pre;
 }
 
-[data-negative]:after {
+[data-negative]::after {
   content: '-';
   position: absolute;
   left: .5em;
@@ -33,6 +33,20 @@
 .inline-input input {
   width: 100%;
 }
+
+.input-error-message {
+  background: hsla(0 0 0 / .40);
+  position: absolute;
+  right: 0;
+  border-radius: 10px;
+  width: 100vw;
+}
+
+[data-message]::before {
+  content: attr(data-message);
+  display: block;
+}
+
 
 label {
   cursor: pointer;

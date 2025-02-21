@@ -49,11 +49,12 @@ const AddPlayer = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target)
+    const form = event.target.closest('form')
+    const formData = new FormData(form)
     const { name } = Object.fromEntries(formData.entries())
     addPlayer(name)
     // Get all input elements in the form
-    const inputs = event.target.querySelectorAll('input[type=text]');
+    const inputs = form.querySelectorAll('input[type=text]');
 
     // Loop through each input and clear its value
     for (let i = 0; i < inputs.length; i++) {
@@ -71,13 +72,18 @@ const AddPlayer = () => {
             id="add-player-input"
             name="name"
             type="text"
-            required
             aria-description="Type a player name to add"
             autoComplete="off" autoCorrect="off" spellCheck="false"
             placeholder={show ? 'Player Name' : 'Add Player'}
             className="paper-input"
             onFocus={() => setShow(true)}
-            onBlur={() => setTimeout(() => setShow(false), 100)}
+            onBlur={(event) => {
+              if (event.target.value) {
+                handleSubmit(event)
+              } else {
+                setTimeout(() => setShow(false), 100)
+              }
+            }}
             ref={inputRef}
           />
           {show ? <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button> : null}
@@ -93,8 +99,9 @@ const SelectPlayers = () => {
   const location = useLocation()
   const [edit, showEdit] = React.useState()
   const handleEdit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target)
+    const form = event.target.closest('form')
+    if (event.target === form) event.preventDefault();
+    const formData = new FormData(form)
     const { name, id } = Object.fromEntries(formData.entries())
     updatePlayer(id, name)
     showEdit(null)
@@ -127,7 +134,12 @@ const SelectPlayers = () => {
                     placeholder="Player Name"
                     className="paper-input"
                     onFocus={() => showEdit(id)}
-                    onBlur={() => setTimeout(() => showEdit((i) => i === id ? null : i), 100)}
+                    onBlur={(event) => {
+                      handleEdit(event)
+                      setTimeout(() => {
+                        showEdit((i) => i === id ? null : i)
+                      }, 100)
+                    }}
                   />
                   {edit === id ? <Ariakit.Button className="paper-button" type="submit">OK</Ariakit.Button> : null}
                 </Grid>
