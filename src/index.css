@@ -26,7 +26,7 @@
 
 @font-face {
   font-family: 'Bangers';
-  src: url('/fonts/Bangers-Regular.woff2') format('woff');
+  src: url('./assets/fonts/Bangers-Regular.woff2') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -34,7 +34,7 @@
 
 @font-face {
   font-family: 'Jua';
-  src: url('/fonts/Jua-Regular.woff2') format('woff');
+  src: url('./assets/fonts/Jua-Regular.woff2') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

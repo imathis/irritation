@@ -23,7 +23,7 @@ export const Menu = ({ fixed }) => {
 
   return (
     <div className="menu" data-fixed={fixed || null}>
-      <Button data-active={showMenu || null} ariaLabel="show menu" className="menu-button" onClick={() => setShowMenu((s) => !s)}>
+      <Button data-active={showMenu || null} aria-label="show menu" className="menu-button" onClick={() => setShowMenu((s) => !s)}>
         <div className="menu-button-text" />
       </Button>
       {showMenu ? (

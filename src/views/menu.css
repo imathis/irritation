@@ -2,7 +2,7 @@
   z-index: 1;
   position: fixed;
   left: 0;
-  top: 25px;
+  top: calc(env(safe-area-inset-top) + 25px);
 }
 
 .menu-panel {
