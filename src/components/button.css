@@ -15,8 +15,8 @@ button:focus {
 }
 
 .main-button {
-  font-size: 7dvh;
-  padding: 0.1em 0.8em;
+  font-size: 6.5dvh;
+  padding: 0.1em 0;
   text-shadow: var(--action-button-shadow);
   color: var(--main-button-color);
 }
