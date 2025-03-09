@@ -9,7 +9,9 @@
   --main-bg: hsl(202 78.4% 18%);
   --backdrop-bg: hsl(202 78.4% 08% / 0.7);
   --full-height: 100dvh;
-  --full-safe-height: calc(var(--full-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  --full-safe-height: calc(
+    var(--full-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
   --title-color: #fff;
   --title-shadow: hsl(201 78.4% 10% / 50%);
   --main-button-color: hsl(201 78.4% 78%);
@@ -25,16 +27,16 @@
 }
 
 @font-face {
-  font-family: 'Bangers';
-  src: url('./assets/fonts/Bangers-Regular.woff2') format('woff');
+  font-family: "Bangers";
+  src: url("/src/assets/fonts/Bangers-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Jua';
-  src: url('./assets/fonts/Jua-Regular.woff2') format('woff');
+  font-family: "Jua";
+  src: url("/src/assets/fonts/Jua-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -64,7 +66,7 @@ h1 {
   line-height: 1.1;
 }
 
-input[type=number] {
+input[type="number"] {
   text-align: right;
 }
 
