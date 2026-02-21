@@ -8,7 +8,7 @@ REMOTE_DIR="../var/www/brandon/playirritation.com/html"
 
 # Step 1: Build the site
 echo "Starting site build..."
-if yarn build; then
+if bun run build; then
 	echo "Build succeeded. Proceeding with sync..."
 else
 	echo "Build failed. Aborting deployment."
