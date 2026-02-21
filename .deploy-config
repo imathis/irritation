@@ -1,0 +1,5 @@
+# Deployment configuration for static site
+LOCAL_DIR="dist/"                    # Path to your local site build directory
+REMOTE_USER="root"                   # SSH username for the server
+REMOTE_HOST="ssh.playirritation.com" # Hostname or IP of the server
+REMOTE_DIR="../var/www/brandon/playirritation.com/html"

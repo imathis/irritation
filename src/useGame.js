@@ -5,12 +5,24 @@ const initializeGame = (opts = {}) => ({
   players: [],
   currentRound: 1,
   finalRound: 8,
+  skippedRounds: [],
   scores: [],
   updatedAt: new Date(),
   complete: false,
   dealerId: null,
   ...opts,
 })
+
+const getNextRoundNumber = (startRound, finalRound, skippedRounds = []) => {
+  const skippedSet = new Set(skippedRounds)
+  for (let round = startRound; round <= finalRound; round += 1) {
+    if (!skippedSet.has(round)) {
+      return round
+    }
+  }
+
+  return null
+}
 
 const useGameStore = create(persist((set, get) => ({
   ...initializeGame(),
@@ -126,6 +138,61 @@ const useGameStore = create(persist((set, get) => ({
     return scores.filter(s => s.round === targetRound)
   },
 
+  getUnplayedRounds: () => {
+    const { currentRound, finalRound, scores, skippedRounds } = get()
+    const skipped = new Set(skippedRounds)
+    const rounds = []
+
+    for (let round = currentRound; round <= finalRound; round += 1) {
+      if (skipped.has(round)) continue
+      if (scores.some((score) => score.round === round)) continue
+      rounds.push(round)
+    }
+
+    return rounds
+  },
+
+  selectNextRound: (nextRound) => {
+    set((state) => {
+      const selectedRound = Number.parseInt(nextRound, 10)
+
+      if (Number.isNaN(selectedRound)) {
+        console.warn('Cannot change round: invalid selection')
+        return state
+      }
+
+      if (selectedRound < state.currentRound || selectedRound > state.finalRound) {
+        console.warn('Cannot change round: selected round is out of range')
+        return state
+      }
+
+      if (state.scores.some((score) => score.round === selectedRound)) {
+        console.warn('Cannot change round: selected round has already been played')
+        return state
+      }
+
+      if (selectedRound === state.currentRound) {
+        return state
+      }
+
+      const skippedRounds = new Set(state.skippedRounds)
+      for (let round = state.currentRound; round < selectedRound; round += 1) {
+        const roundHasScores = state.scores.some((score) => score.round === round)
+        if (!roundHasScores) {
+          skippedRounds.add(round)
+        }
+      }
+
+      return {
+        currentRound: selectedRound,
+        skippedRounds: [...skippedRounds].sort((a, b) => a - b),
+        updatedAt: new Date(),
+      }
+    })
+
+    return get().currentRound
+  },
+
   getRoundPlayerScores: (round = null) => {
     const { getActivePlayers, getRoundScores } = get()
     const roundScores = getRoundScores(round)
@@ -169,43 +236,52 @@ const useGameStore = create(persist((set, get) => ({
 
   getDealer: () => {
     const { dealerId, players, getPlayer, getNextDealer } = get()
-    if (!dealerId) {
-      const dealer = players.find(({ active }) => active)
-      set((state) => ({
-        ...state,
-        dealerId: dealer.id,
-      }))
+    const activePlayers = players.filter(({ active }) => active)
 
-      return dealer
-    } else if (!getPlayer(dealerId).active) {
-      const dealer = getNextDealer()
-      set((state) => ({
-        ...state,
-        dealerId: dealer.id,
-      }))
+    if (!activePlayers.length) {
+      return null
+    }
+
+    if (!dealerId) {
+      return activePlayers[0]
+    }
+
+    const dealer = getPlayer(dealerId)
+    if (dealer?.active) {
       return dealer
     }
-    return getPlayer(dealerId)
+
+    return getNextDealer()
   },
 
   getNextDealer: () => {
     const { players, dealerId } = get()
+    const activePlayers = players.filter((player) => player.active)
+
+    if (!activePlayers.length) {
+      return null
+    }
+
+    if (!dealerId) {
+      return activePlayers[0]
+    }
 
     // Find the index of the current dealer
     const dealerIndex = players.findIndex(player => player.id === dealerId)
-    let nextIndex = (dealerIndex + 1) % players.length;
-
-    // Loop until we find an active player or return to the start
-    while (!players[nextIndex].active) {
-      nextIndex = (nextIndex + 1) % players.length;
-      // If we circle back to the current dealer, no active player found
-      if (nextIndex === dealerIndex) {
-        return null; // or handle as no active player available
-      }
+    if (dealerIndex < 0) {
+      return activePlayers[0]
     }
 
-    // Return the new dealer's id
-    return players[nextIndex]
+    // Loop until we find an active player or return to the start
+    let nextIndex = (dealerIndex + 1) % players.length
+    while (nextIndex !== dealerIndex) {
+      if (players[nextIndex].active) {
+        return players[nextIndex]
+      }
+      nextIndex = (nextIndex + 1) % players.length
+    }
+
+    return players[dealerIndex].active ? players[dealerIndex] : null
   },
 
   advanceRound: () => {
@@ -215,10 +291,25 @@ const useGameStore = create(persist((set, get) => ({
 
       // Only advance if we have a winner all players have scores
       if (getRoundScoresComplete()) {
-        const { id: dealerId } = getNextDealer()
+        const nextRound = getNextRoundNumber(
+          state.currentRound + 1,
+          state.finalRound,
+          state.skippedRounds
+        )
+        if (!nextRound) {
+          console.warn('Cannot advance round: no remaining rounds')
+          return state
+        }
+
+        const nextDealer = getNextDealer()
+        if (!nextDealer) {
+          console.warn('Cannot advance round: no active dealer available')
+          return state
+        }
+
         return {
-          currentRound: state.currentRound + 1,
-          dealerId,
+          currentRound: nextRound,
+          dealerId: nextDealer.id,
           updatedAt: new Date(),
         }
       }
@@ -269,8 +360,8 @@ const useGameStore = create(persist((set, get) => ({
   },
 
   getGameComplete: () => {
-    const { currentRound, getRoundScoresComplete } = get()
-    return currentRound === 8 && getRoundScoresComplete()
+    const { currentRound, finalRound, getRoundScoresComplete } = get()
+    return currentRound === finalRound && getRoundScoresComplete()
   },
 
   playAgain: () => {
@@ -286,6 +377,7 @@ const useGameStore = create(persist((set, get) => ({
     // Only persist these state items
     players: state.players,
     currentRound: state.currentRound,
+    skippedRounds: state.skippedRounds,
     scores: state.scores,
     updatedAt: state.updatedAt,
   })

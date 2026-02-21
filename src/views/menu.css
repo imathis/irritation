@@ -1,84 +1,120 @@
 .menu[data-fixed] {
-  z-index: 1;
-  position: fixed;
-  left: 0;
-  top: calc(env(safe-area-inset-top) + 25px);
+	z-index: 1;
+	position: fixed;
+	left: 0;
+	top: calc(env(safe-area-inset-top) + 25px);
 }
 
 .menu-panel {
-  position: fixed;
-  display: grid;
-  inset: 0;
-  z-index: 5;
-  background: var(--backdrop-bg);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(4px);
-  place-items: center;
+	position: fixed;
+	display: grid;
+	inset: 0;
+	z-index: 5;
+	background: var(--backdrop-bg);
+	-webkit-backdrop-filter: blur(14px);
+	backdrop-filter: blur(4px);
+	place-items: center;
 }
 
 .menu-panel-options {
-  margin: 0 auto;
-  transform: rotate(-8deg);
+	margin: 0 auto;
 }
 
 .menu-panel-options button {
-  font-size: 7.5dvh;
-  padding: 0;
-  text-shadow: var(--action-button-shadow);
-  color: var(--action-button-color);
+	font-size: 7.5dvh;
+	padding: 0;
+	text-shadow: var(--action-button-shadow);
+	color: var(--action-button-color);
+}
+
+.menu-round-panel {
+	width: min(90vw, 720px);
+}
+
+.menu-round-heading {
+	font-family: Bangers;
+	text-align: center;
+	width: 100%;
+	font-size: clamp(2rem, 6.5dvh, 3.5rem);
+	text-shadow: var(--action-button-shadow);
+	color: var(--action-button-color);
+}
+
+.menu-round-options {
+	justify-items: stretch;
+	width: 100%;
+	max-width: 350px;
+	margin: 0 auto;
+}
+
+.menu-round-option {
+	font-size: clamp(1.25rem, 5.3dvh, 3rem);
+	padding: 0;
+	text-align: left;
+	text-shadow: var(--action-button-shadow);
+	color: var(--action-button-color);
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1.2fr 3fr 2fr;
+	margin: 0.3rem auto;
+}
+
+.menu-round-cards {
+	color: var(--title-color);
+	text-align: left;
 }
 
 .menu-button {
-  position: relative;
-  z-index: 100;
-  padding: 15px 8px;
-  --line-pos: calc(min(18vw, 120px) + env(safe-area-inset-left));
-  width: var(--line-pos);
+	position: relative;
+	z-index: 100;
+	padding: 15px 8px;
+	--line-pos: calc(min(18vw, 120px) + env(safe-area-inset-left));
+	width: var(--line-pos);
 }
 
 .menu-button-text {
-  width: 25px;
-  height: 4px;
-  background: currentColor;
-  position: relative;
-  transition: all 0.2s ease-out;
-  cursor: pointer;
-  margin: 0 auto;
+	width: 25px;
+	height: 4px;
+	background: currentColor;
+	position: relative;
+	transition: all 0.2s ease-out;
+	cursor: pointer;
+	margin: 0 auto;
 }
 
 .menu-button-text::before,
 .menu-button-text::after {
-  content: '';
-  position: absolute;
-  width: 25px;
-  height: 4px;
-  background: currentColor;
-  transition: all 0.2s ease-out;
-  left: 0;
+	content: "";
+	position: absolute;
+	width: 25px;
+	height: 4px;
+	background: currentColor;
+	transition: all 0.2s ease-out;
+	left: 0;
 }
 
 .menu-button-text::before {
-  transform: translate3d(0, -8px, 0);
+	transform: translate3d(0, -8px, 0);
 }
 
 .menu-button-text::after {
-  /*top: 8px;*/
-  transform: translate3d(0, 8px, 0);
+	/*top: 8px;*/
+	transform: translate3d(0, 8px, 0);
 }
 
 [data-active] .menu-button-text {
-  background: transparent;
+	background: transparent;
 }
 
 [data-active] .menu-button-text::before {
-  transform: translate3d(0, 0, 0) rotate(45deg);
+	transform: translate3d(0, 0, 0) rotate(45deg);
 }
 
 [data-active] .menu-button-text::after {
-  transform: translate3d(0, 0, 0) rotate(-45deg);
+	transform: translate3d(0, 0, 0) rotate(-45deg);
 }
 
 [data-active] .menu-button-text::before,
 [data-active] .menu-button-text::after {
-  background: currentColor;
+	background: currentColor;
 }

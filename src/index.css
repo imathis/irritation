@@ -1,109 +1,112 @@
 :root {
-  font-family: system-ui, Inter, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+	font-family: system-ui, Inter, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
 
-  color-scheme: light dark;
-  --text-color: rgba(255, 255, 255, 0.87);
-  --light-text-color: rgba(255, 255, 255, 0.67);
-  --main-bg: hsl(202 78.4% 18%);
-  --backdrop-bg: hsl(202 78.4% 08% / 0.7);
-  --full-height: 100dvh;
-  --full-safe-height: calc(
-    var(--full-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom)
-  );
-  --title-color: #fff;
-  --title-shadow: hsl(201 78.4% 10% / 50%);
-  --main-button-color: hsl(201 78.4% 78%);
-  --action-button-color: hsl(201 78.4% 78%);
-  --action-button-shadow: 4px 4px hsl(201 78.4% 10% / 50%);
+	color-scheme: light dark;
+	--text-color: rgba(255, 255, 255, 0.87);
+	--light-text-color: rgba(255, 255, 255, 0.67);
+	--main-bg: hsl(202 78.4% 18%);
+	--backdrop-bg: hsl(202 78.4% 08% / 0.8);
+	--full-height: 100dvh;
+	--full-safe-height: calc(
+		var(--full-height) -
+		env(safe-area-inset-top) -
+		env(safe-area-inset-bottom)
+	);
+	--title-color: #fff;
+	--title-shadow: hsl(201 78.4% 10% / 50%);
+	--main-button-color: hsl(201 78.4% 78%);
+	--action-button-color: hsl(201 78.4% 78%);
+	--action-button-shadow: 4px 4px hsl(201 78.4% 10% / 50%);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--text-color);
-  background-color: var(--main-bg);
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--text-color);
+	background-color: var(--main-bg);
 }
 
 @font-face {
-  font-family: "Bangers";
-  src: url("/src/assets/fonts/Bangers-Regular.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: fallback;
+	font-family: "Bangers";
+	src: url("/src/assets/fonts/Bangers-Regular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: fallback;
 }
 
 @font-face {
-  font-family: "Jua";
-  src: url("/src/assets/fonts/Jua-Regular.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: fallback;
+	font-family: "Jua";
+	src: url("/src/assets/fonts/Jua-Regular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: fallback;
 }
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+	font-weight: 500;
+	color: #646cff;
+	text-decoration: inherit;
 }
 
 a:hover {
-  color: #535bf2;
+	color: #535bf2;
 }
 
 html,
 body {
-  margin: 0;
+	margin: 0;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+	font-size: 3.2em;
+	line-height: 1.1;
 }
 
 input[type="number"] {
-  text-align: right;
+	text-align: right;
 }
 
 input[type="number"] {
-  -moz-appearance: textfield;
+	-moz-appearance: textfield;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+	-webkit-appearance: none;
 }
 
 .splash-screen::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background: linear-gradient(hsl(201 78.4% 28%), hsl(201 78.4% 10%));
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: -2;
+	background: linear-gradient(hsl(201 78.4% 28%), hsl(201 78.4% 10%));
 }
 
 .standalone {
-  --full-height: 100vh;
+	--full-height: 100vh;
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    --text-color: #242424;
-    --light-text-color: hsl(201 81% 18% / 0.67);
-    --main-bg: #f2f2f2;
-    --backdrop-bg: hsl(0 0% 77% / 0.7);
-    --title-color: hsl(201, 81%, 18%);
-    --title-shadow: rgba(255 255 255 / 0.3);
-    --main-button-color: #fff;
-    --action-button-color: hsl(201, 81%, 18%);
-  }
+	:root {
+		--text-color: #242424;
+		--light-text-color: hsl(201 81% 18% / 0.67);
+		--main-bg: #f2f2f2;
+		--backdrop-bg: hsl(0 0% 77% / 0.8);
+		--title-color: hsl(201, 81%, 24%);
+		--title-shadow: rgba(255 255 255 / 0.3);
+		--main-button-color: #fff;
+		--action-button-color: hsl(201, 81%, 18%);
+		--action-button-shadow: 4px 4px hsl(201 78.4% 10% / 10%);
+	}
 
-  .splash-screen::after {
-    background: linear-gradient(hsl(201 78.4% 88%), hsl(201 78.4% 20%));
-  }
+	.splash-screen::after {
+		background: linear-gradient(hsl(201 78.4% 88%), hsl(201 78.4% 20%));
+	}
 }
