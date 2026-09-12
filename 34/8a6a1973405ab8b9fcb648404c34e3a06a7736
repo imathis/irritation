@@ -1,0 +1,42 @@
+AGENTS.md
+  h_2a4a0fdc393ff7 10,43-45,50-54,58-59
+bunfig.toml
+  h_2a4a0fdc393ff7 1-2
+package.json
+  h_2a4a0fdc393ff7 9,39
+src/App.jsx
+  h_2a4a0fdc393ff7 22
+src/helpers.js
+  h_2a4a0fdc393ff7 22-46
+src/helpers.test.js
+  h_2a4a0fdc393ff7 1-59
+src/roundRules.test.js
+  h_2a4a0fdc393ff7 1-15
+src/useGame.js
+  h_2a4a0fdc393ff7 3,64,71-80,82-83,99-103,106-110,123,125,207,209-211,214-216,219-221,225-228,230,233-235,238-241,243-253,255-261,293,295-299,305-306,308-317
+src/useGame.test.js
+  h_2a4a0fdc393ff7 1-154
+src/views/gameStart.jsx
+  h_2a4a0fdc393ff7 10-17,19-23
+src/views/players.jsx
+  h_2a4a0fdc393ff7 122
+src/views/round.jsx
+  h_2a4a0fdc393ff7 16
+src/views/scores.jsx
+  h_2a4a0fdc393ff7 18,117,120,122-132,134,136,138
+src/views/standings.jsx
+  h_2a4a0fdc393ff7 49,57-63
+test/preload.js
+  h_2a4a0fdc393ff7 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "348a6a1973405ab8b9fcb648404c34e3a06a7736",
+  "prompts": {},
+  "humans": {
+    "h_2a4a0fdc393ff7": {
+      "author": "Brandon Mathis <brandon@imathis.com>"
+    }
+  }
+}
