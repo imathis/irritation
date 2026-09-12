@@ -13,8 +13,7 @@ const Round = () => {
   const round = useRoundNumber();
   const { deal, books, runs } = dealForRound(round);
   const navigate = useNavigate();
-  // TODO: Pick dealer from API somehow
-  const dealer = getDealer()?.name || 'No Dealer';
+  const dealer = getDealer(round)?.name || 'No Dealer';
 
   return (
     <Layout className="splash-screen">

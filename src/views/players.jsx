@@ -119,7 +119,7 @@ const SelectPlayers = () => {
           <PaperRow space={[15, 27, 0]} style={{ fontSize: '3.5em' }}>Players</PaperRow>
           {players.map(({ name, id }) => (
             <PaperRow
-              key={name}
+              key={id}
               rule={<DeletePlayer name={name} id={id} />}
             >
               <form onSubmit={handleEdit}>

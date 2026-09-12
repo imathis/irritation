@@ -15,7 +15,7 @@ const ChooseWinner = ({ playerId }) => {
   const winner = getRoundWinner(roundNumber)
   return (
     <Ariakit.Button
-      onClick={() => addScore({ playerId, isWinner: true })}
+      onClick={() => addScore({ playerId, isWinner: true, round: roundNumber })}
       tabIndex={-1}
       style={{
         fontSize: '3em',
@@ -114,19 +114,28 @@ const PlayerScore = ({ score, playerId, isWinner }) => {
 
 const NextRound = () => {
   const roundNumber = useRoundNumber()
-  const { getRoundScoresComplete, currentRound, advanceRound } = useGame()
+  const { getRoundScoresComplete, currentRound, advanceRound, getNextPlayableRound } = useGame()
   const navigate = useNavigate()
   if (!getRoundScoresComplete(roundNumber)) {
-    return
+    return null
   }
-  const nextRound = () => {
-    if (roundNumber === currentRound) advanceRound()
-    navigate('../round/2')
+
+  const goToNextRound = () => {
+    if (roundNumber === currentRound) {
+      navigate(`/round/${advanceRound()}`)
+      return
+    }
+
+    const next = getNextPlayableRound(roundNumber)
+    if (next) {
+      navigate(`/round/${next}`)
+    }
   }
+
   if (roundNumber === 1) {
-    return <ActionButton onClick={nextRound}>Next Round</ActionButton>
+    return <ActionButton onClick={goToNextRound}>Next Round</ActionButton>
   }
-  return <ActionButton onClick={() => navigate('../standings')}>Standings</ActionButton>
+  return <ActionButton onClick={() => navigate(`/round/${roundNumber}/standings`)}>Standings</ActionButton>
 }
 
 export const Scores = () => {

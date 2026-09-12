@@ -46,7 +46,7 @@ const PlayerScore = ({ player, score, isWinner, wins }) => {
 }
 
 export const Standings = () => {
-  const { getStandings, getPlayer, getGameComplete, advanceRound, currentRound } = useGame()
+  const { getStandings, getPlayer, getGameComplete, advanceRound, currentRound, getNextPlayableRound } = useGame()
   const roundNumber = useRoundNumber()
   const scores = getStandings(roundNumber)
   const navigate = useNavigate()
@@ -54,9 +54,14 @@ export const Standings = () => {
 
   const nextRound = () => {
     if (roundNumber === currentRound) {
-      return navigate(`/round/${advanceRound()}`)
+      navigate(`/round/${advanceRound()}`)
+      return
     }
-    navigate(`/round/${roundNumber + 1}`)
+
+    const next = getNextPlayableRound(roundNumber)
+    if (next) {
+      navigate(`/round/${next}`)
+    }
   }
   const playAgain = () => {
     navigate(`/again`)

@@ -19,7 +19,7 @@ const NewGame = ({ resetGame, restartGame }) => {
     if (resetGame) reset()
     if (restartGame) playAgain()
     navigate('/players')
-  }, [navigate, reset, playAgain])
+  }, [navigate, reset, playAgain, resetGame, restartGame])
 }
 
 function App() {

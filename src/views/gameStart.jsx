@@ -7,12 +7,20 @@ import { Layout } from '../components/layout'
 import useGame from '../useGame'
 
 const useResumePath = () => {
-  const { scores, currentRound } = useGame()
-  if (scores.find((s) => s?.round === currentRound)) {
-    return '/standings'
-  } else if (scores.length) {
-    return '/round'
+  const { scores, currentRound, getRoundScoresComplete } = useGame()
+
+  if (getRoundScoresComplete(currentRound)) {
+    return `/round/${currentRound}/standings`
   }
+
+  if (scores.some((score) => score?.round === currentRound)) {
+    return `/round/${currentRound}/scores`
+  }
+
+  if (scores.length) {
+    return `/round/${currentRound}`
+  }
+
   return '/players'
 }
 

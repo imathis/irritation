@@ -19,3 +19,28 @@ export const pluralize = (single, plural, count) => {
 
   return pluralizeText({ single, plural, count })
 }
+
+export const getNextRoundNumber = (startRound, finalRound, skippedRounds = []) => {
+  const skippedSet = new Set(skippedRounds)
+  for (let round = startRound; round <= finalRound; round += 1) {
+    if (!skippedSet.has(round)) {
+      return round
+    }
+  }
+
+  return null
+}
+
+export const getDealerForRound = (players, roundNumber) => {
+  const activePlayers = players.filter((player) => player.active)
+  if (!activePlayers.length) {
+    return null
+  }
+
+  const round = Number(roundNumber)
+  if (!Number.isInteger(round) || round < 1) {
+    return activePlayers[0]
+  }
+
+  return activePlayers[(round - 1) % activePlayers.length]
+}

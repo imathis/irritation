@@ -7,7 +7,7 @@ It captures practical commands and repo-specific implementation conventions.
 ## Repo Snapshot
 - Stack: React 18, Vite 6, React Router 7, Zustand, Ariakit.
 - Language: JavaScript/JSX only (no TypeScript today).
-- Package manager: Bun.
+- Package manager: Bun (`packageManager`: `bun@1.4.2`).
 - Lockfile: `bun.lock`.
 - Runtime in CI/dev commands: Bun (`bun`, `bun run`, `bunx`).
 
@@ -40,27 +40,23 @@ bun run lint
 # lint one file
 bunx eslint src/views/players.jsx
 
+# tests
+bun run test
+
 # deploy (build + rsync via deploy.sh)
 bun run deploy
 ```
 
-## Test Commands (Current State)
-- No `test` script exists in `package.json` right now.
-- No `*.test.*`/`*.spec.*` files exist in `src/` right now.
-- `bun run test` currently fails because no `test` script is defined.
+## Test Commands
+- Runner: Bun's built-in test runner (`bun test`).
+- Script: `bun run test` (same as `bun test`).
+- Preload: `test/preload.js` (via `bunfig.toml`) mocks `localStorage` for the persisted Zustand store.
+- Game-rule tests live next to source: `src/*.test.js`.
 
 ### Single-test guidance
-- Single-test execution is currently unavailable (no test runner configured).
-- If Vitest gets added, use:
 ```bash
-bunx vitest run src/path/to/file.test.jsx
-bunx vitest run src/path/to/file.test.jsx -t "case name"
-```
-
-- If Bun test runner gets adopted instead, use:
-```bash
-bun test src/path/to/file.test.jsx
-bun test --test-name-pattern "case name" src/path/to/file.test.jsx
+bun test src/helpers.test.js
+bun test src/useGame.test.js -t "winner takes"
 ```
 
 ## Lint / Build Baseline

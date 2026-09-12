@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { getDealerForRound, getNextRoundNumber } from './helpers'
 
 const initializeGame = (opts = {}) => ({
   players: [],
@@ -8,21 +9,8 @@ const initializeGame = (opts = {}) => ({
   skippedRounds: [],
   scores: [],
   updatedAt: new Date(),
-  complete: false,
-  dealerId: null,
   ...opts,
 })
-
-const getNextRoundNumber = (startRound, finalRound, skippedRounds = []) => {
-  const skippedSet = new Set(skippedRounds)
-  for (let round = startRound; round <= finalRound; round += 1) {
-    if (!skippedSet.has(round)) {
-      return round
-    }
-  }
-
-  return null
-}
 
 const useGameStore = create(persist((set, get) => ({
   ...initializeGame(),
@@ -32,7 +20,6 @@ const useGameStore = create(persist((set, get) => ({
     set((state) => ({
       players: [...state.players, { id, name, active: true }],
       updatedAt: new Date(),
-      // dealerId: state.players.length ? state.dealerId : id,
     }))
   },
 
@@ -73,34 +60,33 @@ const useGameStore = create(persist((set, get) => ({
   },
 
   addScore: ({ playerId, score, isWinner = false, round = null }) => {
-    if (get().complete) return
-
     set((state) => {
-      const targetRound = round || state.currentRound
+      const targetRound = round ?? state.currentRound
 
       if (!state.players.find(({ id }) => id === playerId)) {
         console.error('Player not found')
         return state
       }
 
-      // If this is a new winner, remove the previous winner's score for this round
-      let updatedScores = isWinner ? state.scores.filter(s =>
-        !(s.round === targetRound && s.isWinner)
-      ) : state.scores
+      let updatedScores = state.scores
 
-      // Remove any existing score for this player in this round
-      updatedScores = updatedScores.filter(s =>
-        !(s.round === targetRound && s.playerId === playerId)
+      if (isWinner) {
+        updatedScores = updatedScores.map((entry) => {
+          if (entry.round === targetRound && entry.isWinner && entry.playerId !== playerId) {
+            return { ...entry, isWinner: false, score: null }
+          }
+          return entry
+        })
+      }
+
+      updatedScores = updatedScores.filter((entry) =>
+        !(entry.round === targetRound && entry.playerId === playerId)
       )
 
       if (isWinner || score !== '') {
-
-        // Convert score to negative for non-winners
         const adjustedScore = isWinner ? 0 : -Math.abs(score)
 
-        // If score is valid update player's score
         if (!Number.isNaN(adjustedScore)) {
-          // Add the new score
           updatedScores = [...updatedScores, {
             round: targetRound,
             playerId,
@@ -110,17 +96,18 @@ const useGameStore = create(persist((set, get) => ({
         }
       }
 
-      // Get all scores for the target round after adding the new score
-      const roundScores = updatedScores.filter(s => s.round === targetRound)
-      const winner = roundScores.find(s => s.isWinner)
-      const nonWinnerScores = roundScores.filter(s => !s.isWinner)
+      const roundScores = updatedScores.filter((entry) => entry.round === targetRound)
+      const winner = roundScores.find((entry) => entry.isWinner)
+      const nonWinnerScores = roundScores.filter((entry) =>
+        !entry.isWinner && Number.isFinite(entry.score)
+      )
 
-      // If there's a winner, update their score based on current non-winner scores
       if (winner) {
-        updatedScores = updatedScores.map(s =>
-          s.round === targetRound && s.isWinner
-            ? { ...s, score: Math.abs(nonWinnerScores.reduce((sum, s) => sum + s.score, 0)) }
-            : s
+        const winnerTotal = Math.abs(nonWinnerScores.reduce((sum, entry) => sum + entry.score, 0))
+        updatedScores = updatedScores.map((entry) =>
+          entry.round === targetRound && entry.isWinner
+            ? { ...entry, score: winnerTotal }
+            : entry
         )
       }
 
@@ -133,9 +120,9 @@ const useGameStore = create(persist((set, get) => ({
 
   getRoundScores: (round = null) => {
     const { scores, currentRound } = get()
-    const targetRound = round || currentRound
+    const targetRound = round ?? currentRound
 
-    return scores.filter(s => s.round === targetRound)
+    return scores.filter((entry) => entry.round === targetRound)
   },
 
   getUnplayedRounds: () => {
@@ -217,79 +204,67 @@ const useGameStore = create(persist((set, get) => ({
 
   getRoundWinner: (round = null) => {
     const { scores, currentRound, players } = get()
-    const targetRound = round || currentRound
+    const targetRound = round ?? currentRound
 
-    const winnerScore = scores.find(s => s.round === targetRound && s.isWinner === true)
-    if (winnerScore) {
-      return {
-        name: players.find(({ id }) => id === winnerScore.playerId).name,
-        playerId: winnerScore.playerId,
-      }
+    const winnerScore = scores.find((entry) => entry.round === targetRound && entry.isWinner === true)
+    if (!winnerScore) {
+      return
+    }
+
+    const player = players.find(({ id }) => id === winnerScore.playerId)
+    if (!player) {
+      return
+    }
+
+    return {
+      name: player.name,
+      playerId: winnerScore.playerId,
     }
   },
 
-  // Round has a winner and each player has a score
+  // Round has a winner and each active player has a score
   getRoundScoresComplete: (round = null) => {
-    const { getRoundScores, getRoundWinner, getActivePlayers } = get()
-    return getRoundWinner(round) && getRoundScores(round).length === getActivePlayers().length
-  },
-
-  getDealer: () => {
-    const { dealerId, players, getPlayer, getNextDealer } = get()
-    const activePlayers = players.filter(({ active }) => active)
-
+    const { getRoundScores, getActivePlayers } = get()
+    const activePlayers = getActivePlayers()
     if (!activePlayers.length) {
-      return null
+      return false
     }
 
-    if (!dealerId) {
-      return activePlayers[0]
+    const roundScores = getRoundScores(round)
+    if (!roundScores.some((entry) => entry.isWinner)) {
+      return false
     }
 
-    const dealer = getPlayer(dealerId)
-    if (dealer?.active) {
-      return dealer
-    }
-
-    return getNextDealer()
-  },
-
-  getNextDealer: () => {
-    const { players, dealerId } = get()
-    const activePlayers = players.filter((player) => player.active)
-
-    if (!activePlayers.length) {
-      return null
-    }
-
-    if (!dealerId) {
-      return activePlayers[0]
-    }
-
-    // Find the index of the current dealer
-    const dealerIndex = players.findIndex(player => player.id === dealerId)
-    if (dealerIndex < 0) {
-      return activePlayers[0]
-    }
-
-    // Loop until we find an active player or return to the start
-    let nextIndex = (dealerIndex + 1) % players.length
-    while (nextIndex !== dealerIndex) {
-      if (players[nextIndex].active) {
-        return players[nextIndex]
+    return activePlayers.every((player) => {
+      const entry = roundScores.find((score) => score.playerId === player.id)
+      if (!entry) {
+        return false
       }
-      nextIndex = (nextIndex + 1) % players.length
-    }
+      if (entry.isWinner) {
+        return true
+      }
+      return Number.isFinite(entry.score)
+    })
+  },
 
-    return players[dealerIndex].active ? players[dealerIndex] : null
+  getDealer: (round = null) => {
+    const { players, currentRound } = get()
+    return getDealerForRound(players, round ?? currentRound)
+  },
+
+  getNextPlayableRound: (fromRound = null) => {
+    const { currentRound, finalRound, skippedRounds } = get()
+    return getNextRoundNumber(
+      (fromRound ?? currentRound) + 1,
+      finalRound,
+      skippedRounds
+    )
   },
 
   advanceRound: () => {
-    const { getNextDealer } = get()
     set((state) => {
       const { getRoundScoresComplete } = get()
 
-      // Only advance if we have a winner all players have scores
       if (getRoundScoresComplete()) {
         const nextRound = getNextRoundNumber(
           state.currentRound + 1,
@@ -301,15 +276,8 @@ const useGameStore = create(persist((set, get) => ({
           return state
         }
 
-        const nextDealer = getNextDealer()
-        if (!nextDealer) {
-          console.warn('Cannot advance round: no active dealer available')
-          return state
-        }
-
         return {
           currentRound: nextRound,
-          dealerId: nextDealer.id,
           updatedAt: new Date(),
         }
       }
@@ -320,34 +288,33 @@ const useGameStore = create(persist((set, get) => ({
     return get().currentRound
   },
 
-
   getStandings: (upToRound = null) => {
     const { players, scores, currentRound } = get()
-    const maxRound = upToRound || currentRound
+    const maxRound = upToRound ?? currentRound
 
-    const playerScores = players.map((player) => {
-      const playerScores = scores.filter(s =>
-        s.playerId === player.id &&
-        s.round <= maxRound
+    const totals = players.map((player) => {
+      const playerScores = scores.filter((entry) =>
+        entry.playerId === player.id &&
+        entry.round <= maxRound &&
+        Number.isFinite(entry.score)
       )
-
-      const totalScore = playerScores.reduce((sum, { score }) => sum + score, 0)
-      const wins = playerScores.filter(s => s.isWinner).length
-
-      const maxScore = Math.max(...players.map((player) => {
-        const scoresForPlayer = scores.filter(s => s.playerId === player.id && s.round <= maxRound);
-        return scoresForPlayer.reduce((sum, { score }) => sum + score, 0);
-      }));
 
       return {
         player: player.name,
         playerId: player.id,
-        score: totalScore,
-        wins,
-        isWinner: totalScore === maxScore,
+        score: playerScores.reduce((sum, { score }) => sum + score, 0),
+        wins: playerScores.filter((entry) => entry.isWinner).length,
       }
-    }).sort((a, b) => b.score - a.score)
-    return playerScores
+    })
+
+    const maxScore = totals.reduce(
+      (max, { score }) => Math.max(max, score),
+      Number.NEGATIVE_INFINITY
+    )
+
+    return totals
+      .map((row) => ({ ...row, isWinner: row.score === maxScore }))
+      .sort((a, b) => b.score - a.score)
   },
 
   getAllRoundScores: () => {
